@@ -22,7 +22,6 @@ class Updater {
 	
 	var counter:Float = 0;
 	var timescale:Float = 1.0;
-	var triggered:Bool = false;
 	
 	public function new(duration:Float, repetitions:Int = -1, autoDispose:Bool = true) {
 		this.duration = duration;
@@ -63,10 +62,6 @@ class Updater {
 		resetCounter();
 	}
 	
-	public function trigger() {
-		triggered = true;
-	}
-	
 	public function update(dt:Float) {
 		
 		if (isActive) {
@@ -86,8 +81,6 @@ class Updater {
 			
 			incrementCounter(dt);
 		}
-		
-		if (triggered) triggered = false; // or let user manage to have falling edge state?
 	}
 	
 	function incrementCounter(dt:Float) {

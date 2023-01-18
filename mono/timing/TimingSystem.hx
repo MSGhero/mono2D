@@ -9,7 +9,7 @@ class TimingSystem extends System {
 	
 	@:fastFamily
 	var timings : {
-		updaters:UpdaterList
+		updaters:mono.timing.Paralleler
 	}
 	
 	public function new(ecs:Universe) {
@@ -40,7 +40,7 @@ class TimingSystem extends System {
 		});
 		
 		if (ups == null) {
-			ups = new UpdaterList();
+			ups = new Paralleler([]);
 			universe.setComponents(entity, ups);
 		}
 		
@@ -51,20 +51,7 @@ class TimingSystem extends System {
 		super.update(dt);
 		
 		iterate(timings, {
-			
-			for (updater in updaters) {
-				
-				if (updater.repetitions == 0) {
-					if (updater.autoDispose) {
-						updater.dispose();
-						updaters.remove(updater);
-					}
-				}
-				
-				else {
-					updater.update(dt);
-				}
-			}
+			updaters.update(dt);
 		});
 	}
 }

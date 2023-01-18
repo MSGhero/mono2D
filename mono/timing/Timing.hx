@@ -21,7 +21,7 @@ class Timing {
 		return tw;
 	}
 	
-	public static function cycle(updaters:UpdaterList, overallReps:Int = -1) {
+	public static function cycle(updaters:Array<Updater>, overallReps:Int = -1) {
 		final cycle = new Cycler(overallReps, updaters);
 		return cycle;
 	}

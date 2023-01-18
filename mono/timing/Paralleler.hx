@@ -1,7 +1,5 @@
 package mono.timing;
 
-import timing.Updater;
-
 class Paralleler extends Updater {
 	
 	public var updaters:Array<Updater>;
@@ -29,12 +27,26 @@ class Paralleler extends Updater {
 		}
 	}
 	
+	public inline function push(up:Updater) {
+		updaters.push(up);
+	}
+	
 	override function update(dt:Float) {
 		
 		if (isActive) {
 			
 			for (up in updaters) {
-				up.update(dt);
+				
+				if (up.repetitions == 0) {
+					if (up.autoDispose) {
+						up.dispose();
+						updaters.remove(up);
+					}
+				}
+				
+				else {
+					up.update(dt * timescale);
+				}
 			}
 		}
 	}

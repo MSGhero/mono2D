@@ -14,6 +14,9 @@ class AnimRequest {
 	var loopPoint:Int = 0;
 	
 	function fulfill(sheet:Spritesheet) {
+		
+		for (name in frameNames) if (!sheet.exists(name)) throw 'Frame $name not found';
+		
 		return ({
 			name : name,
 			frames : sheet.map(frameNames),
