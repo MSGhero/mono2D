@@ -45,6 +45,7 @@ class AnimSystem extends System {
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
 		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, ""), handleAC);
+		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
 	}
 	
 	function handleSpriteAnim(entity) {
@@ -80,6 +81,11 @@ class AnimSystem extends System {
 				if (play != null && play.length > 0) anim.play(play);
 				
 				universe.setComponents(entity, anim);
+				
+			case PLAY_ANIMATION(entity, play):
+				fetch(anims, entity, {
+					anim.play(play);
+				});
 		}
 	}
 }

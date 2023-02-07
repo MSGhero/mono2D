@@ -12,18 +12,6 @@ import mono.graphics.RenderCommand;
 
 class RenderSystem extends System {
 	
-	/*
-	@:fullFamily
-	var sprites : {
-		resources : {
-			
-		},
-		requires : {
-			sprite:Sprite
-		}
-	};
-	*/
-	
 	var batchMap:StringMap<SpriteBatch>;
 	var parentMap:StringMap<Layers>;
 	

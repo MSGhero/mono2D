@@ -56,6 +56,8 @@ class AnimController {
 		updater.paused = false;
 		updater.duration = 1 / currAnim.fps;
 		updater.repetitions = currAnim.loop ? -1 : frames.length;
+		
+		if (onFrame != null) onFrame();
 	}
 	
 	public inline function pause() {
