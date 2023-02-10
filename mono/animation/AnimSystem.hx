@@ -46,6 +46,7 @@ class AnimSystem extends System {
 		Command.register(ADD_SHEET(null, ""), handleAC);
 		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, ""), handleAC);
 		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
+		Command.register(COPY_ANIMATIONS(Entity.none, Entity.none, ""), handleAC);
 	}
 	
 	function handleSpriteAnim(entity) {
@@ -99,7 +100,8 @@ class AnimSystem extends System {
 				fetch(anims, from, {
 					final newAnim = new AnimController();
 					newAnim.copyFrom(anim);
-					newAnim.play(play);
+					if (play != null && play.length > 0) newAnim.play(play);
+					universe.setComponents(entity, newAnim);
 				});
 		}
 	}
