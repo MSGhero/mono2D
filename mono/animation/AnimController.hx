@@ -45,6 +45,11 @@ class AnimController {
 		return this;
 	}
 	
+	public function copyFrom(ac:AnimController) {
+		for (k => v in ac.anims) anims.set(k, v);
+		return this;
+	}
+	
 	public function play(name:String, from:Int = 0) {
 		
 		currAnim = anims.get(name);

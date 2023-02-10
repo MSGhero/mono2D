@@ -73,18 +73,33 @@ class AnimSystem extends System {
 				sheetMap.set(id, sheet);
 			case CREATE_ANIMATIONS(entity, from, animReqs, play):
 				
-				final anim = new AnimController();
+				var newAnim = null;
+				
+				fetch(anims, entity, {
+					// if animcontroller already exists, add to it instead
+					newAnim = anim;
+				});
+				
+				if (newAnim == null) newAnim = new AnimController();
 				
 				final sheet = sheetMap.get(from);
-				for (req in animReqs) anim.add(req.fulfill(sheet));
+				for (req in animReqs) newAnim.add(req.fulfill(sheet));
 				
-				if (play != null && play.length > 0) anim.play(play);
+				if (play != null && play.length > 0) newAnim.play(play);
 				
-				universe.setComponents(entity, anim);
+				universe.setComponents(entity, newAnim);
 				
 			case PLAY_ANIMATION(entity, play):
 				fetch(anims, entity, {
 					anim.play(play);
+				});
+			
+			case COPY_ANIMATIONS(entity, from, play):
+				
+				fetch(anims, from, {
+					final newAnim = new AnimController();
+					newAnim.copyFrom(anim);
+					newAnim.play(play);
 				});
 		}
 	}
