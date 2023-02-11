@@ -27,6 +27,7 @@ class TimingSystem extends System {
 		
 		switch (tc) {
 			case ADD_UPDATER(entity, updater):
+				if (entity == Entity.none) entity = universe.createEntity();
 				getUpdaters(entity).push(updater);
 		}
 	}

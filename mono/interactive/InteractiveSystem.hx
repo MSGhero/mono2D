@@ -26,6 +26,7 @@ class InteractiveSystem extends System {
 	// maybe a class or resource or something
 	var cx:Float;
 	var cy:Float;
+	var cEnabled:Bool;
 	
 	var currentOver:Entity;
 	var tempOver:Entity;
@@ -34,6 +35,7 @@ class InteractiveSystem extends System {
 		super(ecs);
 		
 		cx = cy = 0;
+		cEnabled = true;
 		currentOver = tempOver = Entity.none;
 	}
 	
@@ -41,6 +43,8 @@ class InteractiveSystem extends System {
 		super.onEnabled();
 		
 		Command.register(CursorCommand.POSITION_ABSOLUTE(0, 0), handleCC);
+		Command.register(CursorCommand.DISABLE_CURSOR, handleCC);
+		Command.register(CursorCommand.ENABLE_CURSOR, handleCC);
 	}
 	
 	function handleCC(cc:CursorCommand) {
@@ -48,6 +52,10 @@ class InteractiveSystem extends System {
 		switch (cc) {
 			case POSITION_ABSOLUTE(x, y):
 				cx = x; cy = y;
+			case DISABLE_CURSOR:
+				cEnabled = false;
+			case ENABLE_CURSOR:
+				cEnabled = true;
 		}
 	}
 	
@@ -56,12 +64,14 @@ class InteractiveSystem extends System {
 		
 		tempOver = Entity.none;
 		
-		iterate(interactives, entity -> {
-			if (interactive.enabled && interactive.isPointWithin(cx, cy)) {
-				// need to deal with sorting somehow
-				tempOver = entity;
-			}
-		});
+		if (cEnabled) {
+			iterate(interactives, entity -> {
+				if (interactive.enabled && interactive.isPointWithin(cx, cy)) {
+					// need to deal with sorting somehow
+					tempOver = entity;
+				}
+			});
+		}
 		
 		if (currentOver != tempOver) {
 			
