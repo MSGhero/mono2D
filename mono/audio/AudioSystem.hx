@@ -1,5 +1,7 @@
 package mono.audio;
 
+import mono.timing.TimingCommand;
+import mono.timing.Timing;
 import hxd.Res;
 import hxd.snd.SoundGroup;
 import mono.command.Command;
@@ -10,6 +12,7 @@ import hxd.snd.Manager;
 import hxd.snd.Channel;
 import mono.input.Input;
 import mono.audio.AudioCommand;
+import ecs.Entity;
 
 // this one isn't done, but it's decent now
 class AudioSystem extends System {
@@ -62,6 +65,7 @@ class AudioSystem extends System {
 		Command.register(STOP_BY_TYPE(MUSIC), handleAC);
 		Command.register(STOP_BY_TAG(""), handleAC);
 		Command.register(RESET_VOLUME, handleAC);
+		Command.register(FADE(0, 0, 0, null, ""), handleAC);
 	}
 	
 	function handleAC(ac:AudioCommand) {
@@ -120,6 +124,13 @@ class AudioSystem extends System {
 				taggedSounds.get(tag).stop();
 			case RESET_VOLUME:
 				// when volumeInfo gets changed, update all existing sounds
+			case FADE(duration, initVolume, finalVolume, ease, tag):
+				final ch = taggedSounds.get(tag);
+				final tw = Timing.tween(duration, f -> {
+					ch.volume = initVolume + (finalVolume - initVolume) * f;
+				});
+				if (ease != null) tw.ease = ease;
+				Command.queue(ADD_UPDATER(Entity.none, tw));
 		}
 	}
 	

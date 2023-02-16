@@ -2,11 +2,13 @@ package mono.interactive;
 
 import mono.interactive.shapes.Shape;
 
-@:structInit
+@:structInit @:allow(mono.interactive.InteractiveSystem)
 class Interactive {
 	
-	public var enabled:Bool = true;
+	var enabled:Bool = false;
 	public var shape:Shape;
+	
+	public var disablers:Int = 0;
 	
 	// something like index
 	

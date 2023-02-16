@@ -23,7 +23,6 @@ class InteractiveSystem extends System {
 		input:Input
 	}
 	
-	// maybe a class or resource or something
 	var cx:Float;
 	var cy:Float;
 	var cEnabled:Bool;
@@ -31,20 +30,35 @@ class InteractiveSystem extends System {
 	var currentOver:Entity;
 	var tempOver:Entity;
 	
+	var interactiveState:Int;
+	
 	public function new(ecs:Universe) {
 		super(ecs);
 		
 		cx = cy = 0;
 		cEnabled = true;
 		currentOver = tempOver = Entity.none;
+		
+		interactiveState = 0;
 	}
 	
 	override function onEnabled() {
 		super.onEnabled();
 		
+		interactives.onEntityAdded.subscribe(onInteractive);
+		
 		Command.register(CursorCommand.POSITION_ABSOLUTE(0, 0), handleCC);
 		Command.register(CursorCommand.DISABLE_CURSOR, handleCC);
 		Command.register(CursorCommand.ENABLE_CURSOR, handleCC);
+		Command.register(InteractiveCommand.DISABLE_INTERACTIVES(0), handleIC);
+		Command.register(InteractiveCommand.ENABLE_INTERACTIVES(0), handleIC);
+	}
+	
+	function onInteractive(entity) {
+		fetch(interactives, entity, {
+			interactive.enabled = getEnabled(interactive);
+			trace(interactive.enabled, interactive.disablers, interactiveState);
+		});
 	}
 	
 	function handleCC(cc:CursorCommand) {
@@ -56,6 +70,18 @@ class InteractiveSystem extends System {
 				cEnabled = false;
 			case ENABLE_CURSOR:
 				cEnabled = true;
+		}
+	}
+	
+	function handleIC(ic:InteractiveCommand) {
+		
+		switch (ic) {
+			case DISABLE_INTERACTIVES(trigger):
+				interactiveState |= trigger;
+				refresh();
+			case ENABLE_INTERACTIVES(trigger):
+				interactiveState &= ~trigger;
+				refresh();
 		}
 	}
 	
@@ -103,5 +129,16 @@ class InteractiveSystem extends System {
 				}
 			});
 		}
+	}
+	
+	function refresh() {
+		
+		iterate(interactives, {
+			interactive.enabled = getEnabled(interactive);
+		});
+	}
+	
+	inline function getEnabled(interactive:Interactive) {
+		return !(interactive.disablers & interactiveState > 0);
 	}
 }

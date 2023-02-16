@@ -7,4 +7,5 @@ enum AudioCommand {
 	STOP_BY_TYPE(type:AudioType);
 	STOP_BY_TAG(tag:String);
 	RESET_VOLUME;
+	FADE(duration:Float, initVolume:Float, finalVolume:Float, ease:Float->Float, tag:String);
 }

@@ -38,7 +38,6 @@ class MouseSystem extends System {
 		switch (e.kind) {
 			case EMove, ERelease:
 				setup(screen, {
-					// touch seems to be at the prev position on press/release
 					@:privateAccess s2d.syncPos();
 					screenPt.set(e.relX, e.relY);
 					s2d.interactiveCamera.screenToCamera(screenPt); // transform e.relX/Y into viewport space
