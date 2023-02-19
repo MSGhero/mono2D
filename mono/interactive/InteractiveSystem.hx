@@ -50,14 +50,15 @@ class InteractiveSystem extends System {
 		Command.register(CursorCommand.POSITION_ABSOLUTE(0, 0), handleCC);
 		Command.register(CursorCommand.DISABLE_CURSOR, handleCC);
 		Command.register(CursorCommand.ENABLE_CURSOR, handleCC);
+		Command.register(InteractiveCommand.DISABLE_INTERACTIVE(Entity.none), handleIC);
+		Command.register(InteractiveCommand.ENABLE_INTERACTIVE(Entity.none), handleIC);
 		Command.register(InteractiveCommand.DISABLE_INTERACTIVES(0), handleIC);
 		Command.register(InteractiveCommand.ENABLE_INTERACTIVES(0), handleIC);
 	}
 	
 	function onInteractive(entity) {
 		fetch(interactives, entity, {
-			interactive.enabled = getEnabled(interactive);
-			trace(interactive.enabled, interactive.disablers, interactiveState);
+			interactive.enabled = !interactive.disabled && getEnabled(interactive);
 		});
 	}
 	
@@ -76,6 +77,14 @@ class InteractiveSystem extends System {
 	function handleIC(ic:InteractiveCommand) {
 		
 		switch (ic) {
+			case DISABLE_INTERACTIVE(entity):
+				fetch(interactives, entity, {
+					interactive.disabled = true;
+				});
+			case ENABLE_INTERACTIVE(entity):
+				fetch(interactives, entity, {
+					interactive.disabled = false;
+				});
 			case DISABLE_INTERACTIVES(trigger):
 				interactiveState |= trigger;
 				refresh();
@@ -134,7 +143,7 @@ class InteractiveSystem extends System {
 	function refresh() {
 		
 		iterate(interactives, {
-			interactive.enabled = getEnabled(interactive);
+			interactive.enabled = !interactive.disabled && getEnabled(interactive);
 		});
 	}
 	

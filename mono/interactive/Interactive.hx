@@ -8,6 +8,7 @@ class Interactive {
 	var enabled:Bool = false;
 	public var shape:Shape;
 	
+	public var disabled:Bool = false;
 	public var disablers:Int = 0;
 	
 	// something like index
