@@ -2,16 +2,13 @@ package mono.interactive;
 
 import mono.interactive.shapes.Shape;
 
-@:structInit @:allow(mono.interactive.InteractiveSystem)
+@:structInit
 class Interactive {
 	
-	var enabled:Bool = false;
+	public var enabled:Bool = true;
 	public var shape:Shape;
 	
-	public var disabled:Bool = false;
-	public var disablers:Int = 0;
-	
-	// something like index
+	public var priority:Int = 0;
 	
 	public var onOver:()->Void = null;
 	public var onOut:()->Void = null;

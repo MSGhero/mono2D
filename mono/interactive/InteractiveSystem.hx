@@ -30,36 +30,22 @@ class InteractiveSystem extends System {
 	var currentOver:Entity;
 	var tempOver:Entity;
 	
-	var interactiveState:Int;
-	
 	public function new(ecs:Universe) {
 		super(ecs);
 		
 		cx = cy = 0;
 		cEnabled = true;
 		currentOver = tempOver = Entity.none;
-		
-		interactiveState = 0;
 	}
 	
 	override function onEnabled() {
 		super.onEnabled();
-		
-		interactives.onEntityAdded.subscribe(onInteractive);
 		
 		Command.register(CursorCommand.POSITION_ABSOLUTE(0, 0), handleCC);
 		Command.register(CursorCommand.DISABLE_CURSOR, handleCC);
 		Command.register(CursorCommand.ENABLE_CURSOR, handleCC);
 		Command.register(InteractiveCommand.DISABLE_INTERACTIVE(Entity.none), handleIC);
 		Command.register(InteractiveCommand.ENABLE_INTERACTIVE(Entity.none), handleIC);
-		Command.register(InteractiveCommand.DISABLE_INTERACTIVES(0), handleIC);
-		Command.register(InteractiveCommand.ENABLE_INTERACTIVES(0), handleIC);
-	}
-	
-	function onInteractive(entity) {
-		fetch(interactives, entity, {
-			interactive.enabled = !interactive.disabled && getEnabled(interactive);
-		});
 	}
 	
 	function handleCC(cc:CursorCommand) {
@@ -79,18 +65,12 @@ class InteractiveSystem extends System {
 		switch (ic) {
 			case DISABLE_INTERACTIVE(entity):
 				fetch(interactives, entity, {
-					interactive.disabled = true;
+					interactive.enabled = false;
 				});
 			case ENABLE_INTERACTIVE(entity):
 				fetch(interactives, entity, {
-					interactive.disabled = false;
+					interactive.enabled = true;
 				});
-			case DISABLE_INTERACTIVES(trigger):
-				interactiveState |= trigger;
-				refresh();
-			case ENABLE_INTERACTIVES(trigger):
-				interactiveState &= ~trigger;
-				refresh();
 		}
 	}
 	
@@ -100,10 +80,11 @@ class InteractiveSystem extends System {
 		tempOver = Entity.none;
 		
 		if (cEnabled) {
+			var int:Interactive = null;
 			iterate(interactives, entity -> {
-				if (interactive.enabled && interactive.isPointWithin(cx, cy)) {
-					// need to deal with sorting somehow
+				if (interactive.enabled && (tempOver == Entity.none || int.priority < interactive.priority) && interactive.isPointWithin(cx, cy)) {
 					tempOver = entity;
+					int = interactive;
 				}
 			});
 		}
@@ -114,6 +95,7 @@ class InteractiveSystem extends System {
 			if (currentOver != Entity.none) {
 				fetch(interactives, currentOver, {
 					if (interactive.onOut != null) interactive.onOut();
+					hxd.System.setCursor(Default); // mb allow for customization as param in int
 				});
 			}
 			
@@ -123,6 +105,7 @@ class InteractiveSystem extends System {
 			if (currentOver != Entity.none) {
 				fetch(interactives, currentOver, {
 					if (interactive.onOver != null) interactive.onOver();
+					hxd.System.setCursor(Button);
 				});
 			}
 		}
@@ -138,16 +121,5 @@ class InteractiveSystem extends System {
 				}
 			});
 		}
-	}
-	
-	function refresh() {
-		
-		iterate(interactives, {
-			interactive.enabled = !interactive.disabled && getEnabled(interactive);
-		});
-	}
-	
-	inline function getEnabled(interactive:Interactive) {
-		return !(interactive.disablers & interactiveState > 0);
 	}
 }
