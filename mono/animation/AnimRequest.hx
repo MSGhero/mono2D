@@ -9,9 +9,9 @@ class AnimRequest {
 	
 	var name:String;
 	var frameNames:Array<String>;
-	var loop:Bool = true;
-	var fps:Float = 1;
-	var loopPoint:Int = 0;
+	@:optional var loop:Bool = true;
+	@:optional var fps:Float = 1;
+	@:optional var loopPoint:Int = 0;
 	
 	function fulfill(sheet:Spritesheet) {
 		
