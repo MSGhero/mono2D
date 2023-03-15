@@ -40,13 +40,22 @@ class AnimSystem extends System {
 	override function onEnabled() {
 		super.onEnabled();
 		
+		anims.onEntityAdded.subscribe(handleAnim);
 		spriteAnims.onEntityAdded.subscribe(handleSpriteAnim);
 		bitmapAnims.onEntityAdded.subscribe(handleBitmapAnim);
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
 		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, ""), handleAC);
+		Command.register(DEFAULT_ANIMATION(Entity.none, "", ""), handleAC);
 		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
 		Command.register(COPY_ANIMATIONS(Entity.none, Entity.none, ""), handleAC);
+	}
+	
+	function handleAnim(entity) {
+		
+		fetch(anims, entity, {
+			Command.queue(ADD_UPDATER(entity, anim.updater));
+		});
 	}
 	
 	function handleSpriteAnim(entity) {
@@ -54,7 +63,6 @@ class AnimSystem extends System {
 		fetch(spriteAnims, entity, {
 			sprite.t = anim.currFrame;
 			anim.onFrame = () -> sprite.t = anim.currFrame;
-			Command.queue(ADD_UPDATER(entity, anim.updater));
 		});
 	}
 	
@@ -63,7 +71,6 @@ class AnimSystem extends System {
 		fetch(bitmapAnims, entity, {
 			bitmap.tile = anim.currFrame;
 			anim.onFrame = () -> bitmap.tile = anim.currFrame;
-			Command.queue(ADD_UPDATER(entity, anim.updater));
 		});
 	}
 	
@@ -88,6 +95,28 @@ class AnimSystem extends System {
 				
 				if (play != null && play.length > 0) newAnim.play(play);
 				
+				universe.setComponents(entity, newAnim);
+				
+			case DEFAULT_ANIMATION(entity, from, frameName):
+				
+				var newAnim = null;
+					
+				fetch(anims, entity, {
+					// if animcontroller already exists, add to it instead
+					newAnim = anim;
+				});
+				
+				if (newAnim == null) newAnim = new AnimController();
+				
+				final sheet = sheetMap.get(from);
+				final req:AnimRequest = {
+					name : "default",
+					frameNames : [frameName],
+					loop : false
+				};
+				
+				newAnim.add(req.fulfill(sheet));
+				newAnim.play("default");
 				universe.setComponents(entity, newAnim);
 				
 			case PLAY_ANIMATION(entity, play):
