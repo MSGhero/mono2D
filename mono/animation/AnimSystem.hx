@@ -46,7 +46,7 @@ class AnimSystem extends System {
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
 		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, ""), handleAC);
-		Command.register(DEFAULT_ANIMATION(Entity.none, "", ""), handleAC);
+		Command.register(CREATE_FRAME_ANIM(Entity.none, "", ""), handleAC);
 		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
 		Command.register(COPY_ANIMATIONS(Entity.none, Entity.none, ""), handleAC);
 	}
@@ -97,7 +97,7 @@ class AnimSystem extends System {
 				
 				universe.setComponents(entity, newAnim);
 				
-			case DEFAULT_ANIMATION(entity, from, frameName):
+			case CREATE_FRAME_ANIM(entity, from, frameName):
 				
 				var newAnim = null;
 					
