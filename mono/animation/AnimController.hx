@@ -11,6 +11,7 @@ class AnimController {
 	inline function get_frames() return currAnim.frames;
 	
 	public var index(default, null):Int = 0;
+	public var allowLoop:Bool;
 	
 	public var currFrame(get, never):Tile;
 	inline function get_currFrame() { return frames[index]; }
@@ -34,6 +35,7 @@ class AnimController {
 		
 		updater = new Updater(0, -1, false);
 		updater.callback = advance;
+		allowLoop = true;
 		
 		anims = new StringMap();
 		currAnim = null;
@@ -62,6 +64,8 @@ class AnimController {
 		updater.duration = 1 / currAnim.fps;
 		updater.repetitions = currAnim.loop ? -1 : frames.length;
 		
+		allowLoop = true;
+		
 		if (onFrame != null) onFrame();
 	}
 	
@@ -75,7 +79,7 @@ class AnimController {
 	
 	function advance() {
 		
-		if (currAnim.loop) {
+		if (currAnim.loop && allowLoop) {
 			index = (index + 1) % frames.length;
 			if (index < currAnim.loopPoint) index = currAnim.loopPoint;
 			if (onFrame != null) onFrame();

@@ -64,6 +64,7 @@ class AudioSystem extends System {
 		Command.register(PLAY(MUSIC, "", false, 0, ""), handleAC);
 		Command.register(STOP_BY_TYPE(MUSIC), handleAC);
 		Command.register(STOP_BY_TAG(""), handleAC);
+		Command.register(SET_ON_AUDIO_END("", null), handleAC);
 		Command.register(RESET_VOLUME, handleAC);
 		Command.register(FADE(0, 0, 0, null, ""), handleAC);
 	}
@@ -122,6 +123,12 @@ class AudioSystem extends System {
 				}
 			case STOP_BY_TAG(tag):
 				taggedSounds.get(tag).stop();
+			case SET_ON_AUDIO_END(tag, onEnd):
+				final ch = taggedSounds.get(tag);
+				ch.onEnd = () -> {
+					onEnd();
+					ch.onEnd = () -> { };
+				};
 			case RESET_VOLUME:
 				// when volumeInfo gets changed, update all existing sounds
 			case FADE(duration, initVolume, finalVolume, ease, tag):
