@@ -1,5 +1,6 @@
 package mono.input;
 
+import ecs.Entity;
 import haxe.ds.StringMap;
 import mono.command.Command;
 import ecs.Universe;
@@ -26,7 +27,9 @@ class InputSystem extends System {
 	override function onEnabled() {
 		super.onEnabled();
 		
-		Command.register(ADD_INPUT(null, ""), handleInput);
+		Command.register(ADD_INPUT(null, "", Entity.none), handleInput);
+		Command.register(REGISTER_INPUT(Entity.none, ""), handleInput);
+		Command.register(UNREGISTER_INPUT(Entity.none, ""), handleInput);
 		Command.register(ENABLE_INPUT(""), handleInput);
 		Command.register(DISABLE_INPUT(""), handleInput);
 	}
@@ -34,9 +37,13 @@ class InputSystem extends System {
 	function handleInput(ic:InputCommand) {
 		
 		switch (ic) {
-			case ADD_INPUT(input, id):
+			case ADD_INPUT(input, id, entity):
 				inputMap.set(id, input);
-				universe.setComponents(universe.createEntity(), input);
+				if (entity != Entity.none) universe.setComponents(entity, input);
+			case REGISTER_INPUT(entity, tag):
+				universe.setComponents(entity, inputMap.get(tag));
+			case UNREGISTER_INPUT(entity, tag):
+				universe.removeComponents(entity, inputMap.get(tag));
 			case ENABLE_INPUT(id):
 				inputMap.get(id).enabled = true;
 			case DISABLE_INPUT(id):
