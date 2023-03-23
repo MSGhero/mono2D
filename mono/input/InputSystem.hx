@@ -11,23 +11,26 @@ class InputSystem extends System {
 	
 	@:fullFamily
 	var inputs : {
+		resources : {
+			inputMap:StringMap<Input>
+		},
 		requires : {
 			input:Input
 		}
 	};
 	
-	var inputMap:StringMap<Input>;
-	
 	public function new(ecs:Universe) {
 		super(ecs);
 		
-		inputMap = new StringMap();
+		ecs.setResources(
+			new StringMap<Input>() // InputID => Input mapping
+		);
 	}
 	
 	override function onEnabled() {
 		super.onEnabled();
 		
-		Command.register(ADD_INPUT(null, "", Entity.none), handleInput);
+		Command.register(ADD_INPUT(null, ""), handleInput);
 		Command.register(REGISTER_INPUT(Entity.none, ""), handleInput);
 		Command.register(UNREGISTER_INPUT(Entity.none, ""), handleInput);
 		Command.register(ENABLE_INPUT(""), handleInput);
@@ -37,17 +40,28 @@ class InputSystem extends System {
 	function handleInput(ic:InputCommand) {
 		
 		switch (ic) {
-			case ADD_INPUT(input, id, entity):
-				inputMap.set(id, input);
-				if (entity != Entity.none) universe.setComponents(entity, input);
+			case ADD_INPUT(input, id):
+				setup(inputs, {
+					inputMap.set(id, input);
+				});
 			case REGISTER_INPUT(entity, tag):
-				universe.setComponents(entity, inputMap.get(tag));
+				setup(inputs, {
+					final input:Input = inputMap.get(tag);
+					universe.setComponents(entity, input);
+				});
 			case UNREGISTER_INPUT(entity, tag):
-				universe.removeComponents(entity, inputMap.get(tag));
+				setup(inputs, {
+					final input:Input = inputMap.get(tag);
+					universe.removeComponents(entity, input);
+				});
 			case ENABLE_INPUT(id):
-				inputMap.get(id).enabled = true;
+				setup(inputs, {
+					inputMap.get(id).enabled = true;
+				});
 			case DISABLE_INPUT(id):
-				inputMap.get(id).enabled = false;
+				setup(inputs, {
+					inputMap.get(id).enabled = false;
+				});
 			default:
 		}
 	}
