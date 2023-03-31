@@ -116,8 +116,8 @@ class AudioSystem extends System {
 				});
 			case STOP_BY_TYPE(type):
 				switch (type) {
-					case MUSIC: taggedSounds.get("music").stop();
-					case VOICE: taggedSounds.get("voice").stop();
+					case MUSIC: if (taggedSounds.exists("music")) taggedSounds.get("music").stop();
+					case VOICE: if (taggedSounds.exists("voice")) taggedSounds.get("voice").stop();
 					case SFX: setup(audio, { manager.stopByName("sfx"); });
 					case UI: setup(audio, { manager.stopByName("ui"); });
 				}
