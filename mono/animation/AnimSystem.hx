@@ -79,7 +79,7 @@ class AnimSystem extends System {
 		switch (ac) {
 			case ADD_SHEET(sheet, id):
 				sheetMap.set(id, sheet);
-			case CREATE_ANIMATIONS(entity, from, animReqs, play):
+			case CREATE_ANIMATIONS(entity, from, animReqs, play, optionalController):
 				
 				var newAnim = null;
 				
@@ -88,14 +88,13 @@ class AnimSystem extends System {
 					newAnim = anim;
 				});
 				
-				if (newAnim == null) newAnim = new AnimController();
+				if (newAnim == null) newAnim = optionalController == null ? new AnimController() : optionalController;
 				
 				final sheet = sheetMap.get(from);
 				for (req in animReqs) newAnim.add(req.fulfill(sheet));
 				
 				if (play != null && play.length > 0) newAnim.play(play);
-				
-				universe.setComponents(entity, newAnim);
+				if (optionalController == null) universe.setComponents(entity, newAnim);
 				
 			case CREATE_FRAME_ANIM(entity, from, frameName):
 				
