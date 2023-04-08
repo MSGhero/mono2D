@@ -4,12 +4,13 @@ import mono.command.Command;
 import ecs.Entity;
 import ecs.Universe;
 import ecs.System;
+import mono.timing.Paralleler;
 
 class TimingSystem extends System {
 	
 	@:fastFamily
 	var timings : {
-		updaters:mono.timing.Paralleler
+		updaters:Paralleler
 	}
 	
 	public function new(ecs:Universe) {
@@ -42,7 +43,7 @@ class TimingSystem extends System {
 		
 		if (ups == null) {
 			ups = new Paralleler([]);
-			universe.setComponents(entity, ups);
+			universe.setComponents(entity, (ups:Paralleler));
 		}
 		
 		return ups;

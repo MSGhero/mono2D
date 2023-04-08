@@ -45,7 +45,7 @@ class AnimSystem extends System {
 		bitmapAnims.onEntityAdded.subscribe(handleBitmapAnim);
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
-		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, ""), handleAC);
+		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, "", null), handleAC);
 		Command.register(CREATE_FRAME_ANIM(Entity.none, "", ""), handleAC);
 		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
 		Command.register(COPY_ANIMATIONS(Entity.none, Entity.none, ""), handleAC);
@@ -81,14 +81,14 @@ class AnimSystem extends System {
 				sheetMap.set(id, sheet);
 			case CREATE_ANIMATIONS(entity, from, animReqs, play, optionalController):
 				
-				var newAnim = null;
+				var newAnim:AnimController = null;
 				
 				fetch(anims, entity, {
 					// if animcontroller already exists, add to it instead
 					newAnim = anim;
 				});
 				
-				if (newAnim == null) newAnim = optionalController == null ? new AnimController() : optionalController;
+				if (newAnim == null) newAnim = optionalController ?? new AnimController();
 				
 				final sheet = sheetMap.get(from);
 				for (req in animReqs) newAnim.add(req.fulfill(sheet));
@@ -98,14 +98,14 @@ class AnimSystem extends System {
 				
 			case CREATE_FRAME_ANIM(entity, from, frameName):
 				
-				var newAnim = null;
-					
+				var newAnim:AnimController = null;
+				
 				fetch(anims, entity, {
 					// if animcontroller already exists, add to it instead
 					newAnim = anim;
 				});
 				
-				if (newAnim == null) newAnim = new AnimController();
+				newAnim = newAnim ?? new AnimController();
 				
 				final sheet = sheetMap.get(from);
 				final req:AnimRequest = {
