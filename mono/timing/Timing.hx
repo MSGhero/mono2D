@@ -3,13 +3,13 @@ package mono.timing;
 class Timing {
 	
 	public static function every(dur:Float, reps:Int = -1, callback:() -> Void, onComplete:() -> Void = null) {
-		final ev = new Updater(dur, reps, true);
+		final ev = new Updater(dur, reps, false);
 		ev.callback = callback; ev.onComplete = onComplete;
 		return ev;
 	}
 	
 	public static function delay(dur:Float, onComplete:() -> Void) {
-		final del = new Updater(dur, 1, true);
+		final del = new Updater(dur, 1, false);
 		del.onComplete = onComplete;
 		return del;
 	}

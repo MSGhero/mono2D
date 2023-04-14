@@ -23,7 +23,7 @@ class Updater {
 	var counter:Float = 0;
 	var timescale:Float = 1.0;
 	
-	public function new(duration:Float, repetitions:Int = -1, autoDispose:Bool = true) {
+	public function new(duration:Float, repetitions:Int = -1, autoDispose:Bool = false) {
 		this.duration = duration;
 		this.repetitions = repetitions;
 		this.autoDispose = autoDispose;

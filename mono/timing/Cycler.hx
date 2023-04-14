@@ -78,7 +78,7 @@ class Cycler extends Updater {
 		}
 	}
 	
-	function resetUpdaters() {
+	public function resetUpdaters() {
 		
 		for (i in 0...updaters.length) {
 			updaters[i].resetCounter();

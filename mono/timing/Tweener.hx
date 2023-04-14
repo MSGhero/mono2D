@@ -6,7 +6,7 @@ class Tweener extends Updater {
 	public var ease:(perc:Float)->Float = f -> return f;
 	
 	public function new(duration:Float, onUpdate:(easedPerc:Float)->Void) {
-		super(duration, 1, true);
+		super(duration, 1, false);
 		
 		this.onUpdate = onUpdate;
 	}
