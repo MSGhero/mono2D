@@ -14,6 +14,9 @@ class Updater {
 	public var isActive(get, never):Bool;
 	inline function get_isActive() { return !paused && repetitions != 0; }
 	
+	public var isComplete(get, never):Bool;
+	inline function get_isComplete() { return repetitions == 0; }
+	
 	public var isTimeLeft(get, never):Bool;
 	inline function get_isTimeLeft() { return counter > 0; }
 	
