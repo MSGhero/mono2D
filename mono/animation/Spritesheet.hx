@@ -20,7 +20,8 @@ abstract Spritesheet(StringMap<Tile>) {
 		if (sheetRef.length > 0) this.set(sheetRef, sheetTile); // add the whole sheet rect to the spritesheet, for ref
 		
 		for (tpt in tpData.frames) {
-			this.set(tpt.filename, sheetTile.sub(tpt.frame.x, tpt.frame.y, tpt.frame.w, tpt.frame.h, tpt.spriteSourceSize.x, tpt.spriteSourceSize.y));
+			tpt.pivot ??= { x : 0, y : 0 };
+			this.set(tpt.filename, sheetTile.sub(tpt.frame.x, tpt.frame.y, tpt.frame.w, tpt.frame.h, tpt.spriteSourceSize.x - tpt.pivot.x * tpt.sourceSize.w, tpt.spriteSourceSize.y - tpt.pivot.y * tpt.sourceSize.h));
 		}
 		
 		return this;

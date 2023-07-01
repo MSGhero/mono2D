@@ -6,9 +6,10 @@ typedef TexturePackerData = {
 
 typedef TexturePackerTile = {
 	filename:String,
-	frame:{ x:Int, y:Int, w:Int, h:Int },
+	frame: { x:Int, y:Int, w:Int, h:Int },
 	rotated:Bool,
 	trimmed:Bool,
-	spriteSourceSize:{ x:Int, y:Int, w:Int, h:Int },
-	sourceSize:{ w:Int, h:Int },
+	spriteSourceSize: { x:Int, y:Int, w:Int, h:Int },
+	sourceSize: { w:Int, h:Int },
+	?pivot: { x:Float, y:Float }
 }
