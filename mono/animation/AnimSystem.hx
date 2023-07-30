@@ -12,6 +12,13 @@ import mono.animation.AnimCommand;
 
 class AnimSystem extends System {
 	
+	@:fullFamily
+	var animInfo : {
+		resources : {
+			sheetMap:StringMap<Spritesheet>
+		}
+	}
+	
 	@:fastFamily
 	var anims : {
 		anim:AnimController
@@ -29,12 +36,10 @@ class AnimSystem extends System {
 		bitmap:Bitmap
 	}
 	
-	var sheetMap:StringMap<Spritesheet>;
-	
 	public function new(ecs:Universe) {
 		super(ecs);
 		
-		sheetMap = new StringMap();
+		ecs.setResources(new StringMap<Spritesheet>());
 	}
 	
 	override function onEnabled() {
@@ -78,45 +83,51 @@ class AnimSystem extends System {
 		
 		switch (ac) {
 			case ADD_SHEET(sheet, id):
-				sheetMap.set(id, sheet);
+				setup(animInfo, {
+					sheetMap.set(id, sheet);
+				});
 			case CREATE_ANIMATIONS(entity, from, animReqs, play, optionalController):
 				
-				var newAnim:AnimController = null;
-				
-				fetch(anims, entity, {
-					// if animcontroller already exists, add to it instead
-					newAnim = anim;
+				setup(animInfo, {
+					var newAnim:AnimController = null;
+					
+					fetch(anims, entity, {
+						// if animcontroller already exists, add to it instead
+						newAnim = anim;
+					});
+					
+					if (newAnim == null) newAnim = optionalController ?? new AnimController();
+					
+					final sheet = sheetMap.get(from);
+					for (req in animReqs) newAnim.add(req.fulfill(sheet));
+					
+					if (play != null && play.length > 0) newAnim.play(play);
+					if (optionalController == null) universe.setComponents(entity, newAnim);
 				});
-				
-				if (newAnim == null) newAnim = optionalController ?? new AnimController();
-				
-				final sheet = sheetMap.get(from);
-				for (req in animReqs) newAnim.add(req.fulfill(sheet));
-				
-				if (play != null && play.length > 0) newAnim.play(play);
-				if (optionalController == null) universe.setComponents(entity, newAnim);
 				
 			case CREATE_FRAME_ANIM(entity, from, frameName):
 				
-				var newAnim:AnimController = null;
-				
-				fetch(anims, entity, {
-					// if animcontroller already exists, add to it instead
-					newAnim = anim;
+				setup(animInfo, {
+					var newAnim:AnimController = null;
+					
+					fetch(anims, entity, {
+						// if animcontroller already exists, add to it instead
+						newAnim = anim;
+					});
+					
+					newAnim = newAnim ?? new AnimController();
+					
+					final sheet = sheetMap.get(from);
+					final req:AnimRequest = {
+						name : "default",
+						frameNames : [frameName],
+						loop : false
+					};
+					
+					newAnim.add(req.fulfill(sheet));
+					newAnim.play("default");
+					universe.setComponents(entity, newAnim);
 				});
-				
-				newAnim = newAnim ?? new AnimController();
-				
-				final sheet = sheetMap.get(from);
-				final req:AnimRequest = {
-					name : "default",
-					frameNames : [frameName],
-					loop : false
-				};
-				
-				newAnim.add(req.fulfill(sheet));
-				newAnim.play("default");
-				universe.setComponents(entity, newAnim);
 				
 			case PLAY_ANIMATION(entity, play):
 				fetch(anims, entity, {
