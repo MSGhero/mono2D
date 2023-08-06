@@ -14,11 +14,16 @@ class Timing {
 		return del;
 	}
 	
-	// maybe make TweenerProps<T> that has from<T> to<T> dur onComplete ease, etc
 	public static function tween(dur:Float, onUpdate:(f:Float) -> Void, onComplete:() -> Void = null) {
 		final tw = new Tweener(dur, onUpdate);
 		tw.onComplete = onComplete;
 		return tw;
+	}
+	
+	public static function float(dur:Float, start:Float, end:Float, onFloat:(f:Float) -> Void, onComplete:() -> Void = null) {
+		final ftw = new FloatTweener(dur, start, end, onFloat);
+		ftw.onComplete = onComplete;
+		return ftw;
 	}
 	
 	public static function cycle(updaters:Array<Updater>, overallReps:Int = -1) {

@@ -12,6 +12,11 @@ import mono.graphics.RenderCommand;
 
 class RenderSystem extends System {
 	
+	@:fastFamily
+	var sprites : {
+		sprite:Sprite
+	};
+	
 	var batchMap:StringMap<SpriteBatch>;
 	var parentMap:StringMap<Layers>;
 	
@@ -28,6 +33,7 @@ class RenderSystem extends System {
 		Command.register(CREATE_BATCH("", "", 0), handleRC);
 		Command.register(ALLOC_SPRITE(Entity.none, ""), handleRC);
 		Command.register(ALLOC_SPRITES(null, ""), handleRC);
+		Command.register(POSITION_SPRITE(Entity.none, 0, 0), handleRC);
 		
 		Command.register(ADD_PARENT(null, ""), handleDLC);
 		Command.register(ADD_TO(null, "", 0), handleDLC);
@@ -51,6 +57,11 @@ class RenderSystem extends System {
 					elt = batch.alloc(null);
 					universe.setComponents(entity, (elt:Sprite));
 				}
+			case POSITION_SPRITE(entity, x, y):
+				fetch(sprites, entity, {
+					sprite.x = x;
+					sprite.y = y;
+				});
 		}
 	}
 	
