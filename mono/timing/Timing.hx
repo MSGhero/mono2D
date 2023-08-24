@@ -14,15 +14,17 @@ class Timing {
 		return del;
 	}
 	
-	public static function tween(dur:Float, onUpdate:(f:Float) -> Void, onComplete:() -> Void = null) {
+	public static function tween(dur:Float, onUpdate:(f:Float) -> Void, onComplete:() -> Void = null, ease:(perc:Float)->Float = null) {
 		final tw = new Tweener(dur, onUpdate);
 		tw.onComplete = onComplete;
+		if (ease != null) tw.ease = ease;
 		return tw;
 	}
 	
-	public static function float(dur:Float, start:Float, end:Float, onFloat:(f:Float) -> Void, onComplete:() -> Void = null) {
+	public static function float(dur:Float, start:Float, end:Float, onFloat:(f:Float) -> Void, onComplete:() -> Void = null, ease:(perc:Float)->Float = null) {
 		final ftw = new FloatTweener(dur, start, end, onFloat);
 		ftw.onComplete = onComplete;
+		if (ease != null) ftw.ease = ease;
 		return ftw;
 	}
 	
