@@ -21,14 +21,11 @@ class Rect extends Shape {
 		halfHeight = height / 2;
 	}
 	
-	public function isPointWithin(x:Float, y:Float):Bool {
-		return !(x < left || x > right || y < top || y > bottom);
+	public static function fromTL(left:Float, top:Float, width:Float, height:Float) {
+		return new Rect(left + width / 2, top + height / 2, width, height);
 	}
 	
-	public function setFromTL(left:Float, top:Float, width:Float, height:Float) {
-		halfWidth = width / 2;
-		halfHeight = height / 2;
-		centerX = left + halfWidth;
-		centerY = top + halfHeight;
+	public function isPointWithin(x:Float, y:Float):Bool {
+		return !(x < left || x > right || y < top || y > bottom);
 	}
 }
