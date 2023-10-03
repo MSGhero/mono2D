@@ -1,4 +1,4 @@
-package mono.interactive.shapes;
+package mono.geom;
 
 class Rect extends Shape {
 	
@@ -19,13 +19,11 @@ class Rect extends Shape {
 		
 		halfWidth = width / 2;
 		halfHeight = height / 2;
+		
+		type = RECT;
 	}
 	
 	public static function fromTL(left:Float, top:Float, width:Float, height:Float) {
 		return new Rect(left + width / 2, top + height / 2, width, height);
-	}
-	
-	public function isPointWithin(x:Float, y:Float):Bool {
-		return !(x < left || x > right || y < top || y > bottom);
 	}
 }

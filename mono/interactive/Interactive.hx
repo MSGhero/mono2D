@@ -1,6 +1,6 @@
 package mono.interactive;
 
-import mono.interactive.shapes.Shape;
+import mono.geom.Shape;
 
 @:structInit
 class Interactive {
@@ -13,8 +13,4 @@ class Interactive {
 	public var onOver:()->Void = null;
 	public var onOut:()->Void = null;
 	public var onSelect:()->Void = null;
-	
-	public function isPointWithin(x:Float, y:Float) {
-		return shape.isPointWithin(x, y);
-	}
 }

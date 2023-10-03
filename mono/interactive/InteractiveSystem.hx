@@ -1,5 +1,6 @@
 package mono.interactive;
 
+import mono.geom.Intersection;
 import mono.input.Input;
 import ecs.Entity;
 import mono.command.Command;
@@ -82,7 +83,7 @@ class InteractiveSystem extends System {
 		if (cEnabled) {
 			var int:Interactive = null;
 			iterate(interactives, entity -> {
-				if (interactive.enabled && (tempOver == Entity.none || int.priority < interactive.priority) && interactive.isPointWithin(cx, cy)) {
+				if (interactive.enabled && (tempOver == Entity.none || int.priority < interactive.priority) && Intersection.xyInShape(cx, cy, interactive.shape) {
 					tempOver = entity;
 					int = interactive;
 				}
