@@ -1,5 +1,7 @@
 package mono.context;
 
+import mono.context.ConsumerCommand;
+import mono.command.Command;
 import ecs.Universe;
 import ecs.System;
 
@@ -18,6 +20,27 @@ class ConsumerSystem extends System {
 	public function new(ecs:Universe) {
 		super(ecs);
 		
+	}
+	
+	override function onEnabled() {
+		super.onEnabled();
+		
+		Command.register(APPLY_FROM_CONTEXT(null), handleCC);
+		Command.register(APPLY_TO_CONTEXT(null), handleCC);
+	}
+	
+	function handleCC(cc:ConsumerCommand) {
+		
+		switch (cc) {
+			case APPLY_FROM_CONTEXT(f):
+				setup(consumers, {
+					f(ctx);
+				});
+			case APPLY_TO_CONTEXT(f):
+				setup(consumers, {
+					f(ctx);
+				});
+		}
 	}
 	
 	override function update(dt:Float) {
