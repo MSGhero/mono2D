@@ -83,7 +83,7 @@ class InteractiveSystem extends System {
 		if (cEnabled) {
 			var int:Interactive = null;
 			iterate(interactives, entity -> {
-				if (interactive.enabled && (tempOver == Entity.none || int.priority < interactive.priority) && Intersection.xyInShape(cx, cy, interactive.shape) {
+				if (interactive.enabled && (tempOver == Entity.none || int.priority < interactive.priority) && Intersection.xyInShape(cx, cy, interactive.shape)) {
 					tempOver = entity;
 					int = interactive;
 				}
