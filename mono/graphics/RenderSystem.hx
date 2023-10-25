@@ -71,7 +71,7 @@ class RenderSystem extends System {
 			case ADD_PARENT(parent, tag):
 				parentMap.set(tag, parent);
 			case ADD_TO(child, parent, layer):
-				parentMap.get(parent).addChildAt(child, layer);
+				parentMap.get(parent).add(child, layer);
 			case REMOVE_FROM_PARENT(child):
 				child.remove();
 			default:
