@@ -9,5 +9,6 @@ enum AnimCommand {
 	CREATE_ANIMATIONS(entity:Entity, from:String, animReqs:Array<AnimRequest>, play:String, optionalController:AnimController);
 	CREATE_FRAME_ANIM(entity:Entity, from:String, frameName:String);
 	PLAY_ANIMATION(entity:Entity, play:String);
+	PLAY_ANIMATION_FROM(entity:Entity, play:String, from:Int);
 	COPY_ANIMATIONS(entity:Entity, from:Entity, play:String);
 }

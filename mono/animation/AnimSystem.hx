@@ -53,6 +53,7 @@ class AnimSystem extends System {
 		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, "", null), handleAC);
 		Command.register(CREATE_FRAME_ANIM(Entity.none, "", ""), handleAC);
 		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
+		Command.register(PLAY_ANIMATION_FROM(Entity.none, "", 0), handleAC);
 		Command.register(COPY_ANIMATIONS(Entity.none, Entity.none, ""), handleAC);
 	}
 	
@@ -132,6 +133,12 @@ class AnimSystem extends System {
 			case PLAY_ANIMATION(entity, play):
 				fetch(anims, entity, {
 					anim.play(play);
+				});
+			
+				
+			case PLAY_ANIMATION_FROM(entity, play, from):
+				fetch(anims, entity, {
+					anim.play(play, from);
 				});
 			
 			case COPY_ANIMATIONS(entity, from, play):

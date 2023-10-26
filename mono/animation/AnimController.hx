@@ -58,11 +58,14 @@ class AnimController {
 	public function play(name:String, from:Int = 0) {
 		
 		currAnim = anims.get(name);
-		index = from;
+		if (from > -1) {
+			index = from;
+			updater.resetCounter();
+		}
+		else index %= currAnim.frames.length; // continue from current frame number and counter dt
 		
 		if (currAnim == null) throw '$name anim not found, or forgot to play()';
 		
-		updater.resetCounter();
 		updater.paused = false;
 		updater.duration = 1 / currAnim.fps;
 		updater.repetitions = currAnim.loop ? -1 : frames.length;
