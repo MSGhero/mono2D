@@ -14,7 +14,6 @@ import mono.input.Input;
 import mono.audio.AudioCommand;
 import ecs.Entity;
 
-// this one isn't done, but it's decent now
 class AudioSystem extends System {
 	
 	@:fullFamily
@@ -31,9 +30,6 @@ class AudioSystem extends System {
 	
 	@:fullFamily
 	var inputs : {
-		resources : {
-			manager:Manager
-		},
 		requires : {
 			input:Input
 		}
@@ -61,7 +57,7 @@ class AudioSystem extends System {
 	override function onEnabled() {
 		super.onEnabled();
 		
-		Command.register(PLAY(MUSIC, "", false, 0, ""), handleAC);
+		Command.register(PLAY(null, null), handleAC);
 		Command.register(STOP_BY_TYPE(MUSIC), handleAC);
 		Command.register(STOP_BY_TAG(""), handleAC);
 		Command.register(SET_ON_AUDIO_END("", null), handleAC);
@@ -72,43 +68,29 @@ class AudioSystem extends System {
 	function handleAC(ac:AudioCommand) {
 		
 		switch (ac) {
-			case PLAY(type, resPath, loop, volume, tag):
+			case PLAY(snd, info):
 				setup(audio, {
 					
-					var snd = Res.load(resPath).toSound();
 					var channel:Channel = null;
-					var info:AudioInfo = {
-						type : type,
-						loop : loop,
-						volume : volume
-					};
 					
-					var useTag = tag != null && tag.length > 0;
-					
-					// there's a bug with ECS and exhaustiveness checks, need to submit new issue
-					// untyped for now
-					untyped switch (type) {
+					switch (info.type) {
 						case MUSIC:
 							channel = snd.play(info.loop, info.volume * volumeInfo.musicMult);
-							info.tag = useTag ? tag : "music";
+							channel.position = info.position;
+							if (info.tag.length == 0) info.tag = "music";
 							taggedSounds.set(info.tag, channel);
 						case VOICE:
 							channel = snd.play(info.loop, info.volume * volumeInfo.voiceMult);
-							info.tag = useTag ? tag : "voice";
+							channel.position = info.position;
+							if (info.tag.length == 0) info.tag = "voice";
 							taggedSounds.set(info.tag, channel);
 						case SFX:
 							channel = snd.play(info.loop, info.volume * volumeInfo.sfxMult);
-							if (useTag) {
-								info.tag = tag;
-								taggedSounds.set(info.tag, channel);
-							}
+							if (info.tag.length > 0) taggedSounds.set(info.tag, channel);
 							else info.tag = "sfx";
 						case UI:
 							channel = snd.play(info.loop, info.volume * volumeInfo.uiMult);
-							if (useTag) {
-								info.tag = tag;
-								taggedSounds.set(info.tag, channel);
-							}
+							if (info.tag.length > 0) taggedSounds.set(info.tag, channel);
 							else info.tag = "ui";
 					}
 					
@@ -144,12 +126,24 @@ class AudioSystem extends System {
 	override function update(dt:Float) {
 		super.update(dt);
 		
-		setup(inputs, {
-			iterate(inputs, {
-				if (input.justPressed.MUTE) {
-					manager.suspended = !manager.suspended;
-				}
-				// need to implement vol up/down along with reset vol command
+		setup(audio, {
+			setup(inputs, {
+				iterate(inputs, {
+					
+					if (input.justPressed.MUTE) {
+						manager.suspended = !manager.suspended;
+					}
+					
+					if (input.justPressed.VOL_DOWN) {
+						volumeInfo.master = Math.max(0, (volumeInfo.master * 10 - 1) / 10); // steps of 0.1 by default, avoid floating point errors
+						manager.masterVolume = volumeInfo.master;
+					}
+					
+					if (input.justPressed.VOL_UP) {
+						volumeInfo.master = Math.min(1, (volumeInfo.master * 10 + 1) / 10);
+						manager.masterVolume = volumeInfo.master;
+					}
+				});
 			});
 		});
 	}

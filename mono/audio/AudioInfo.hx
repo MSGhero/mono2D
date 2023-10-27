@@ -6,4 +6,5 @@ class AudioInfo {
 	var loop:Bool = false;
 	var volume:Float = 1.0;
 	var tag:String = "";
+	var position:Int = 0;
 }
