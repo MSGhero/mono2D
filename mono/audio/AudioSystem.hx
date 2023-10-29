@@ -61,8 +61,9 @@ class AudioSystem extends System {
 		Command.register(STOP_BY_TYPE(MUSIC), handleAC);
 		Command.register(STOP_BY_TAG(""), handleAC);
 		Command.register(SET_ON_AUDIO_END("", null), handleAC);
-		Command.register(RESET_VOLUME, handleAC);
 		Command.register(FADE(0, 0, 0, null, ""), handleAC);
+		Command.register(MUTE(false), handleAC);
+		Command.register(MUTE_TOGGLE(null), handleAC);
 	}
 	
 	function handleAC(ac:AudioCommand) {
@@ -76,12 +77,10 @@ class AudioSystem extends System {
 					switch (info.type) {
 						case MUSIC:
 							channel = snd.play(info.loop, info.volume * volumeInfo.musicMult);
-							channel.position = info.position;
 							if (info.tag.length == 0) info.tag = "music";
 							taggedSounds.set(info.tag, channel);
 						case VOICE:
 							channel = snd.play(info.loop, info.volume * volumeInfo.voiceMult);
-							channel.position = info.position;
 							if (info.tag.length == 0) info.tag = "voice";
 							taggedSounds.set(info.tag, channel);
 						case SFX:
@@ -94,6 +93,7 @@ class AudioSystem extends System {
 							else info.tag = "ui";
 					}
 					
+					channel.position = info.position;
 					universe.setComponents(universe.createEntity(), channel, info);
 				});
 			case STOP_BY_TYPE(type):
@@ -111,8 +111,6 @@ class AudioSystem extends System {
 					onEnd();
 					ch.onEnd = () -> { };
 				};
-			case RESET_VOLUME:
-				// when volumeInfo gets changed, update all existing sounds
 			case FADE(duration, initVolume, finalVolume, ease, tag):
 				final ch = taggedSounds.get(tag);
 				final tw = Timing.tween(duration, f -> {
@@ -120,31 +118,15 @@ class AudioSystem extends System {
 				});
 				if (ease != null) tw.ease = ease;
 				Command.queue(ADD_UPDATER(Entity.none, tw));
-		}
-	}
-	
-	override function update(dt:Float) {
-		super.update(dt);
-		
-		setup(audio, {
-			setup(inputs, {
-				iterate(inputs, {
-					
-					if (input.justPressed.MUTE) {
-						manager.suspended = !manager.suspended;
-					}
-					
-					if (input.justPressed.VOL_DOWN) {
-						volumeInfo.master = Math.max(0, (volumeInfo.master * 10 - 1) / 10); // steps of 0.1 by default, avoid floating point errors
-						manager.masterVolume = volumeInfo.master;
-					}
-					
-					if (input.justPressed.VOL_UP) {
-						volumeInfo.master = Math.min(1, (volumeInfo.master * 10 + 1) / 10);
-						manager.masterVolume = volumeInfo.master;
-					}
+			case MUTE(mute):
+				setup(audio, {
+					manager.suspended = volumeInfo.muted = mute;
 				});
-			});
-		});
+			case MUTE_TOGGLE(onToggle):
+				setup(audio, {
+					manager.suspended = volumeInfo.muted = !volumeInfo.muted;
+					if (onToggle != null) onToggle(volumeInfo.muted);
+				});
+		}
 	}
 }

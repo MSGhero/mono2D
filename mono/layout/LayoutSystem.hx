@@ -38,6 +38,7 @@ class LayoutSystem extends System {
 			
 			case ENFORCE_ALL:
 				
+				// might need to organize constraints, detect cycles, etc
 				iterate(aligners, {
 					
 					switch (align) {

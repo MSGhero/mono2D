@@ -9,6 +9,7 @@ enum AudioCommand {
 	STOP_BY_TYPE(type:AudioType);
 	STOP_BY_TAG(tag:String);
 	SET_ON_AUDIO_END(tag:String, onEnd:()->Void);
-	RESET_VOLUME;
 	FADE(duration:Float, initVolume:Float, finalVolume:Float, ease:Float->Float, tag:String);
+	MUTE(mute:Bool);
+	MUTE_TOGGLE(onToggle:(muted:Bool)->Void);
 }
