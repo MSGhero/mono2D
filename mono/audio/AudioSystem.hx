@@ -28,13 +28,6 @@ class AudioSystem extends System {
 		}
 	};
 	
-	@:fullFamily
-	var inputs : {
-		requires : {
-			input:Input
-		}
-	};
-	
 	var sfxGroup:SoundGroup;
 	var uiGroup:SoundGroup;
 	
@@ -64,6 +57,8 @@ class AudioSystem extends System {
 		Command.register(FADE(0, 0, 0, null, ""), handleAC);
 		Command.register(MUTE(false), handleAC);
 		Command.register(MUTE_TOGGLE(null), handleAC);
+		Command.register(ADJUST_VOLUME(0, null), handleAC);
+		Command.register(SET_VOLUME(0, null), handleAC);
 	}
 	
 	function handleAC(ac:AudioCommand) {
@@ -126,6 +121,18 @@ class AudioSystem extends System {
 				setup(audio, {
 					manager.suspended = volumeInfo.muted = !volumeInfo.muted;
 					if (onToggle != null) onToggle(volumeInfo.muted);
+				});
+			case ADJUST_VOLUME(delta, callback):
+				setup(audio, {
+					volumeInfo.master = Math.max(0, Math.min(1, volumeInfo.master + delta));
+					manager.masterVolume = volumeInfo.master;
+					if (callback != null) callback(volumeInfo.master);
+				});
+			case SET_VOLUME(vol, callback):
+				setup(audio, {
+					volumeInfo.master = Math.max(0, Math.min(1, vol));
+					manager.masterVolume = volumeInfo.master;
+					if (callback != null) callback(volumeInfo.master);
 				});
 		}
 	}

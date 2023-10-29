@@ -12,4 +12,6 @@ enum AudioCommand {
 	FADE(duration:Float, initVolume:Float, finalVolume:Float, ease:Float->Float, tag:String);
 	MUTE(mute:Bool);
 	MUTE_TOGGLE(onToggle:(muted:Bool)->Void);
+	ADJUST_VOLUME(delta:Float, callback:(vol:Float)->Void); // eventually this should distinguish between master, voice, etc
+	SET_VOLUME(vol:Float, callback:(vol:Float)->Void); // or mb expose audiovolume, consider what to do with callback
 }
