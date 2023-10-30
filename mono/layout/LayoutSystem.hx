@@ -45,8 +45,8 @@ class LayoutSystem extends System {
 						case NONE:
 						case OFFSET(to, x, y):
 							fetch(sprites, to, {
-								sprite.x = other.x + x;
-								sprite.y = other.y + y;
+								if (!Math.isNaN(x)) sprite.x = other.x + x;
+								if (!Math.isNaN(y)) sprite.y = other.y + y;
 							});
 					}
 				});
@@ -59,8 +59,8 @@ class LayoutSystem extends System {
 						case NONE:
 						case OFFSET(to, x, y):
 							fetch(sprites, to, {
-								sprite.x = other.x + x;
-								sprite.y = other.y + y;
+								if (!Math.isNaN(x)) sprite.x = other.x + x;
+								if (!Math.isNaN(y)) sprite.y = other.y + y;
 							});
 					}
 				});
