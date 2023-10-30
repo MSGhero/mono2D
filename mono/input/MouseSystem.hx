@@ -36,7 +36,7 @@ class MouseSystem extends System {
 	function checkMove(e:hxd.Event) {
 		
 		switch (e.kind) {
-			case EMove, ERelease:
+			case EMove, ERelease, EPush:
 				setup(screen, {
 					@:privateAccess s2d.syncPos();
 					screenPt.set(e.relX, e.relY);
