@@ -91,5 +91,13 @@ class InputSystem extends System {
 			
 			input.actions.updateJust(input.previous);
 		});
+		
+		iterate(inputs, {
+			if (input.enabled) {
+				for (device in input.devices) {
+					device.reset(); // not a fan, but hey
+				}
+			}
+		});
 	}
 }

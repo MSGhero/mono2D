@@ -43,6 +43,8 @@ class MouseSystem extends System {
 					s2d.interactiveCamera.screenToCamera(screenPt); // transform e.relX/Y into viewport space
 					Command.queue(POSITION_ABSOLUTE(screenPt.x, screenPt.y));
 				});
+			case EWheel:
+				MouseInput.WHEEL = e.wheelDelta;
 			default:
 		}
 	}

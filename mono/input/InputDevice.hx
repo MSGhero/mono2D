@@ -31,6 +31,8 @@ abstract class InputDevice {
 		return true;
 	}
 	
+	public function reset() { }
+	
 	abstract function isButtonDown(buttonCode:Int):Bool;
 	
 	function areAllDown(buttonCodes:Array<Int>):Bool {
