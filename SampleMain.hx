@@ -90,12 +90,12 @@ class Main extends App {
 					name : "update",
 					enabled : false,
 					systems : [
+						InteractiveSystem,
 						InputSystem,
 						MouseSystem,
 						RenderSystem,
 						AnimSystem,
 						TimingSystem,
-						InteractiveSystem,
 						AudioSystem,
 						CommandSystem // we usually want this to be the final system
 					]
