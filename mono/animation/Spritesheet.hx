@@ -32,9 +32,12 @@ abstract Spritesheet(StringMap<Tile>) {
 		return this;
 	}
 	
-	public function loadAnimation(sheet:Image, animBaseName:String, numRows:Int, numCols:Int, from:Int = 0, count:Int = -1) {
+	public inline function loadAnimation(sheet:Image, animBaseName:String, numRows:Int, numCols:Int, from:Int = 0, count:Int = -1) {
+		loadSubTiles(sheet.toTile(), animBaseName, numRows, numCols, from, count);
+	}
+	
+	public function loadSubTiles(sheetTile:Tile, animBaseName:String, numRows:Int, numCols:Int, from:Int = 0, count:Int = -1) {
 		
-		var sheetTile = sheet.toTile();
 		var ww = Std.int(sheetTile.width / numCols);
 		var hh = Std.int(sheetTile.height / numRows);
 		var i = 0, j = 0;

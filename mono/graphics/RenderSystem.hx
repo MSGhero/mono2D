@@ -34,6 +34,7 @@ class RenderSystem extends System {
 		Command.register(ALLOC_SPRITE(Entity.none, ""), handleRC);
 		Command.register(ALLOC_SPRITES(null, ""), handleRC);
 		Command.register(POSITION_SPRITE(Entity.none, 0, 0), handleRC);
+		Command.register(SPACE_SPRITES(null, 0, 0), handleRC);
 		
 		Command.register(ADD_PARENT(null, ""), handleDLC);
 		Command.register(ADD_TO(null, "", 0), handleDLC);
@@ -62,6 +63,27 @@ class RenderSystem extends System {
 					sprite.x = x;
 					sprite.y = y;
 				});
+			case SPACE_SPRITES(entities, dx, dy):
+				
+				var entity, xx = 0.0, yy = 0.0;
+				for (i in 0...entities.length) {
+					entity = entities[i];
+					
+					fetch(sprites, entity, {
+						
+						if (i == 0) {
+							xx = sprite.x;
+							yy = sprite.y;
+						}
+						
+						else {
+							xx += dx;
+							yy += dy;
+							sprite.x = xx;
+							sprite.y = yy;
+						}
+					});
+				}
 		}
 	}
 	

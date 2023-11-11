@@ -141,13 +141,16 @@ class AnimSystem extends System {
 					anim.play(play, from);
 				});
 			
-			case COPY_ANIMATIONS(entity, from, play):
+			case COPY_ANIMATIONS(entities, from, play):
 				
 				fetch(anims, from, {
-					final newAnim = new AnimController();
-					newAnim.copyFrom(anim);
-					if (play != null && play.length > 0) newAnim.play(play);
-					universe.setComponents(entity, newAnim);
+					
+					for (entity in entities) {
+						final newAnim = new AnimController();
+						newAnim.copyFrom(anim);
+						if (play != null && play.length > 0) newAnim.play(play);
+						universe.setComponents(entity, newAnim);
+					}
 				});
 		}
 	}

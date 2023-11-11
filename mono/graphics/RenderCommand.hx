@@ -8,4 +8,5 @@ enum RenderCommand {
 	ALLOC_SPRITE(entity:Entity, from:String);
 	ALLOC_SPRITES(entities:Array<Entity>, from:String);
 	POSITION_SPRITE(entity:Entity, x:Float, y:Float);
+	SPACE_SPRITES(entities:Array<Entity>, dx:Float, dy:Float);
 }
