@@ -50,7 +50,8 @@ class AnimSystem extends System {
 		bitmapAnims.onEntityAdded.subscribe(handleBitmapAnim);
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
-		Command.register(CREATE_ANIMATIONS(Entity.none, "", null, "", null), handleAC);
+		Command.register(CREATE_ANIMATION(Entity.none, "", null, "", null), handleAC);
+		Command.register(CREATE_ANIMATIONS(null, "", null, ""), handleAC);
 		Command.register(CREATE_FRAME_ANIM(Entity.none, "", ""), handleAC);
 		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
 		Command.register(PLAY_ANIMATION_FROM(Entity.none, "", 0), handleAC);
@@ -87,7 +88,7 @@ class AnimSystem extends System {
 				setup(animInfo, {
 					sheetMap.set(id, sheet);
 				});
-			case CREATE_ANIMATIONS(entity, from, animReqs, play, optionalController):
+			case CREATE_ANIMATION(entity, from, animReqs, play, optionalController):
 				
 				setup(animInfo, {
 					var newAnim:AnimController = null;
@@ -104,6 +105,32 @@ class AnimSystem extends System {
 					
 					if (play != null && play.length > 0) newAnim.play(play);
 					if (optionalController == null) universe.setComponents(entity, newAnim);
+				});
+				
+			case CREATE_ANIMATIONS(entities, from, animReqs, play):
+				
+				setup(animInfo, {
+					
+					final firstAnim = new AnimController();
+					final sheet = sheetMap.get(from);
+					for (req in animReqs) firstAnim.add(req.fulfill(sheet));
+					
+					var entity, newAnim;
+					for (i in 0...entities.length) {
+						entity = entities[i];
+						
+						if (i == 0) {
+							newAnim = firstAnim;
+						}
+						
+						else {
+							newAnim = new AnimController();
+							newAnim.copyFrom(firstAnim);
+						}
+						
+						if (play != null && play.length > 0) newAnim.play(play);
+						universe.setComponents(entity, newAnim);
+					}
 				});
 				
 			case CREATE_FRAME_ANIM(entity, from, frameName):
@@ -141,16 +168,13 @@ class AnimSystem extends System {
 					anim.play(play, from);
 				});
 			
-			case COPY_ANIMATIONS(entities, from, play):
+			case COPY_ANIMATIONS(entity, from, play):
 				
 				fetch(anims, from, {
-					
-					for (entity in entities) {
-						final newAnim = new AnimController();
-						newAnim.copyFrom(anim);
-						if (play != null && play.length > 0) newAnim.play(play);
-						universe.setComponents(entity, newAnim);
-					}
+					final newAnim = new AnimController();
+					newAnim.copyFrom(anim);
+					if (play != null && play.length > 0) newAnim.play(play);
+					universe.setComponents(entity, newAnim);
 				});
 		}
 	}
