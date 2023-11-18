@@ -33,6 +33,8 @@ class RenderSystem extends System {
 		Command.register(CREATE_BATCH("", "", 0), handleRC);
 		Command.register(ALLOC_SPRITE(Entity.none, ""), handleRC);
 		Command.register(ALLOC_SPRITES(null, ""), handleRC);
+		Command.register(ADD_SPRITE(null, ""), handleRC);
+		Command.register(ADD_SPRITES(null, ""), handleRC);
 		Command.register(POSITION_SPRITE(Entity.none, 0, 0), handleRC);
 		Command.register(SPACE_SPRITES(null, 0, 0), handleRC);
 		
@@ -58,6 +60,12 @@ class RenderSystem extends System {
 					elt = batch.alloc(null);
 					universe.setComponents(entity, (elt:Sprite));
 				}
+			case ADD_SPRITE(sprite, to):
+				batchMap.get(to).add(sprite);
+			case ADD_SPRITES(sprites, to):
+				final batch = batchMap.get(to);
+				for (sprite in sprites)
+					batch.add(sprite);
 			case POSITION_SPRITE(entity, x, y):
 				fetch(sprites, entity, {
 					sprite.x = x;
