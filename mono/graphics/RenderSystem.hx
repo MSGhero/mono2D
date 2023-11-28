@@ -37,6 +37,7 @@ class RenderSystem extends System {
 		Command.register(ADD_SPRITES(null, ""), handleRC);
 		Command.register(POSITION_SPRITE(Entity.none, 0, 0), handleRC);
 		Command.register(SPACE_SPRITES(null, 0, 0), handleRC);
+		Command.register(GRID_SPRITES(null, 0, 0, 0, 0), handleRC);
 		
 		Command.register(ADD_PARENT(null, ""), handleDLC);
 		Command.register(ADD_TO(null, "", 0), handleDLC);
@@ -90,6 +91,26 @@ class RenderSystem extends System {
 							sprite.x = xx;
 							sprite.y = yy;
 						}
+					});
+				}
+			
+			case GRID_SPRITES(entities, dx, dy, maxCols, maxRows):
+				
+				var sx = 0.0, sy = 0.0;
+				var entity = entities[0];
+				fetch(sprites, entity, {
+					sx = sprite.x;
+					sy = sprite.y;
+				});
+				
+				if (maxCols <= 0) maxCols = Math.ceil(entities.length / maxRows);
+				
+				for (i in 1...entities.length) {
+					entity = entities[i];
+					
+					fetch(sprites, entity, {
+						sprite.x = sx + dx * (i % maxCols);
+						sprite.y = sy + dy * Std.int(i / maxCols);
 					});
 				}
 		}

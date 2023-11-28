@@ -11,4 +11,5 @@ enum RenderCommand {
 	ADD_SPRITES(sprites:Array<Sprite>, to:String);
 	POSITION_SPRITE(entity:Entity, x:Float, y:Float);
 	SPACE_SPRITES(entities:Array<Entity>, dx:Float, dy:Float);
+	GRID_SPRITES(entities:Array<Entity>, dx:Float, dy:Float, maxCols:Int, maxRows:Int);
 }
