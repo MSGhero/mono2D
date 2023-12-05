@@ -172,7 +172,7 @@ class AnimSystem extends System {
 				
 				fetch(anims, from, {
 					final newAnim = new AnimController();
-					newAnim.copyFrom(anim);
+					newAnim.refAnimsFrom(anim);
 					if (play != null && play.length > 0) newAnim.play(play);
 					universe.setComponents(entity, newAnim);
 				});

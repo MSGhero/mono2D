@@ -40,31 +40,38 @@ class AnimController {
 		updater.callback = advance;
 		allowLoop = true;
 		
-		anims = new StringMap();
+		anims = null;
 		currAnim = null;
 		onFrame = null;
 	}
 	
 	public function add(anim:Animation) {
+		anims ??= new StringMap();
 		anims.set(anim.name, anim);
 		return this;
 	}
 	
 	public function copyFrom(ac:AnimController) {
+		anims ??= new StringMap();
 		for (k => v in ac.anims) anims.set(k, v);
 		return this;
 	}
 	
+	public function refAnimsFrom(ac:AnimController) {
+		anims = ac.anims;
+	}
+	
 	public function play(name:String, from:Int = 0) {
 		
+		if (anims == null) throw '$name anim was not added';
 		currAnim = anims.get(name);
+		if (currAnim == null) throw '$name anim not found, or forgot to play()';
+		
 		if (from > -1) {
 			index = from;
 			updater.resetCounter();
 		}
 		else index %= currAnim.frames.length; // continue from current frame number and counter dt
-		
-		if (currAnim == null) throw '$name anim not found, or forgot to play()';
 		
 		updater.paused = false;
 		updater.duration = 1 / currAnim.fps;
