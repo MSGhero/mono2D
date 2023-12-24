@@ -6,7 +6,7 @@ class AnimRangeParser {
 		
 		var ranges;
 		final res = [];
-		final digitReg = ~/\d+(-\d+)?/g;
+		final digitReg = ~/\d+-\d+/g;
 		var left, right, prevLeft = "", iters;
 		
 		for (str in list) {
