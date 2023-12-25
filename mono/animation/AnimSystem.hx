@@ -68,7 +68,7 @@ class AnimSystem extends System {
 	function handleSpriteAnim(entity) {
 		
 		fetch(spriteAnims, entity, {
-			sprite.t = anim.currFrame;
+			if (anim.currAnim != null) sprite.t = anim.currFrame;
 			anim.onFrame = () -> sprite.t = anim.currFrame;
 		});
 	}
@@ -76,7 +76,7 @@ class AnimSystem extends System {
 	function handleBitmapAnim(entity) {
 		
 		fetch(bitmapAnims, entity, {
-			bitmap.tile = anim.currFrame;
+			if (anim.currAnim != null) bitmap.tile = anim.currFrame;
 			anim.onFrame = () -> bitmap.tile = anim.currFrame;
 		});
 	}
