@@ -1,5 +1,6 @@
 package mono.graphics;
 
+import IDs.BatchID;
 import haxe.ds.StringMap;
 import h2d.Layers;
 import h2d.SpriteBatch;
@@ -14,7 +15,8 @@ class RenderSystem extends System {
 	
 	@:fastFamily
 	var sprites : {
-		sprite:Sprite
+		sprite:Sprite,
+		batch:BatchID
 	};
 	
 	var batchMap:StringMap<SpriteBatch>;
@@ -30,9 +32,9 @@ class RenderSystem extends System {
 	override function onEnabled() {
 		super.onEnabled();
 		
+		sprites.onEntityAdded.subscribe(onSprite);
+		
 		Command.register(CREATE_BATCH("", "", 0), handleRC);
-		Command.register(ALLOC_SPRITE(Entity.none, ""), handleRC);
-		Command.register(ALLOC_SPRITES(null, ""), handleRC);
 		Command.register(ADD_SPRITE(null, ""), handleRC);
 		Command.register(ADD_SPRITES(null, ""), handleRC);
 		Command.register(POSITION_SPRITE(Entity.none, 0, 0), handleRC);
@@ -51,16 +53,6 @@ class RenderSystem extends System {
 				final batch = new SpriteBatch(null); // input tile is not used
 				batchMap.set(tag, batch);
 				Command.queue(ADD_TO(batch, parentTag, layer));
-			case ALLOC_SPRITE(entity, from):
-				final elt = batchMap.get(from).alloc(null); // the animation will set the tile properly
-				universe.setComponents(entity, (elt:Sprite));
-			case ALLOC_SPRITES(entities, from):
-				final batch = batchMap.get(from); // avoids many stringmap gets
-				var elt:Sprite;
-				for (entity in entities) {
-					elt = batch.alloc(null);
-					universe.setComponents(entity, (elt:Sprite));
-				}
 			case ADD_SPRITE(sprite, to):
 				batchMap.get(to).add(sprite);
 			case ADD_SPRITES(sprites, to):
@@ -119,7 +111,7 @@ class RenderSystem extends System {
 	function handleDLC(dlc:DisplayListCommand) {
 		
 		switch (dlc) {
-			case ADD_PARENT(parent, tag):
+			case ADD_PARENT(parent, tag): // parentid should be part of its batch, then add onAdded
 				parentMap.set(tag, parent);
 			case ADD_TO(child, parent, layer):
 				parentMap.get(parent).add(child, layer);
@@ -127,5 +119,12 @@ class RenderSystem extends System {
 				child.remove();
 			default:
 		}
+	}
+	
+	function onSprite(entity:Entity) {
+		
+		fetch(sprites, entity, {
+			batchMap.get(batch).add(sprite);
+		});
 	}
 }
