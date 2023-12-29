@@ -7,6 +7,15 @@ abstract class Shape {
 	
 	public var type(default, null):ShapeType;
 	
+	public var left(get, never):Float;
+	abstract function get_left():Float;
+	public var right(get, never):Float;
+	abstract function get_right():Float;
+	public var top(get, never):Float;
+	abstract function get_top():Float;
+	public var bottom(get, never):Float;
+	abstract function get_bottom():Float;
+	
 	public function new(centerX:Float, centerY:Float) {
 		this.centerX = centerX;
 		this.centerY = centerY;

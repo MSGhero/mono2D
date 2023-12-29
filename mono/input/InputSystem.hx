@@ -22,6 +22,7 @@ class InputSystem extends System {
 	public function new(ecs:Universe) {
 		super(ecs);
 		
+		// mb queue this in cmd
 		ecs.setResources(
 			new StringMap<Input>() // InputID => Input mapping
 		);
