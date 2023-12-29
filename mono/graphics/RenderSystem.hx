@@ -52,6 +52,7 @@ class RenderSystem extends System {
 			case CREATE_BATCH(tag, parentTag, layer):
 				final batch = new SpriteBatch(null); // input tile is not used
 				batchMap.set(tag, batch);
+				batch.hasRotationScale = true; // don't like this, mb just create batch locally
 				Command.queue(ADD_TO(batch, parentTag, layer));
 			case ADD_SPRITE(sprite, to):
 				batchMap.get(to).add(sprite);
