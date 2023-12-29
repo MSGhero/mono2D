@@ -12,6 +12,8 @@ abstract class Shape {
 		this.centerY = centerY;
 	}
 	
+	public abstract function clone():Shape;
+	
 	// maybe get,never
 	public inline function asCircle() {
 		return (cast this:Circle);

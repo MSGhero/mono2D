@@ -12,4 +12,8 @@ class Point extends Shape {
 		
 		type = POINT;
 	}
+	
+	public function clone() {
+		return new Point(centerX, centerY);
+	}
 }

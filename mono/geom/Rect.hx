@@ -23,6 +23,10 @@ class Rect extends Shape {
 		type = RECT;
 	}
 	
+	public function clone() {
+		return new Rect(centerX, centerY, halfWidth * 2, halfHeight * 2);
+	}
+	
 	public static function fromTL(left:Float, top:Float, width:Float, height:Float) {
 		return new Rect(left + width / 2, top + height / 2, width, height);
 	}

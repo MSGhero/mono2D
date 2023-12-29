@@ -16,4 +16,8 @@ class Circle extends Shape {
 		this.radius = radius;
 		type = CIRCLE;
 	}
+	
+	public function clone() {
+		return new Circle(centerX, centerY, radius);
+	}
 }
