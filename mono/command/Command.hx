@@ -50,4 +50,13 @@ abstract Command(EnumValue) from EnumValue to EnumValue {
 	public static function register<T>(type:Command, callback:T->Void) {
 		queue(CoreCommand.REGISTER(type, cast callback));
 	}
+	
+	/**
+	 * Immediately execute all pending commands in the queue
+	 * Probably never need to call this except to avoid race conditions in frame 0
+	 */
+	public static function flush() {
+		@:privateAccess(CommandSystem)
+		CommandSystem._cmdSys.update(0);
+	}
 }
