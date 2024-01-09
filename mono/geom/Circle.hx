@@ -10,10 +10,10 @@ class Circle extends Shape {
 	// consider storing/precalcing radiusSq
 	public var radius:Float;
 	
-	inline function get_left() return centerX - radius;
-	inline function get_right() return centerX + radius;
-	inline function get_top() return centerY - radius;
-	inline function get_bottom() return centerY + radius;
+	inline function get_left() return center.x - radius;
+	inline function get_right() return center.x + radius;
+	inline function get_top() return center.y - radius;
+	inline function get_bottom() return center.y + radius;
 	
 	public function new(centerX:Float, centerY:Float, radius:Float) {
 		super(centerX, centerY);
@@ -23,6 +23,6 @@ class Circle extends Shape {
 	}
 	
 	public function clone() {
-		return new Circle(centerX, centerY, radius);
+		return new Circle(center.x, center.y, radius);
 	}
 }
