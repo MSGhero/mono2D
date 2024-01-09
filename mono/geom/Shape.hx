@@ -1,15 +1,15 @@
 package mono.geom;
 
+import h2d.col.Point;
+
 abstract class Shape {
 	
-	public var centerX:Float;
-	public var centerY:Float;
+	public var center:Point;
 	
 	public var type(default, null):ShapeType;
 	
 	public function new(centerX:Float, centerY:Float) {
-		this.centerX = centerX;
-		this.centerY = centerY;
+		center = new Point(centerX, centerY);
 	}
 	
 	// maybe get,never
@@ -23,7 +23,7 @@ abstract class Shape {
 }
 
 enum ShapeType {
-	POINT;
 	CIRCLE;
 	RECT;
+	RTRI;
 }
