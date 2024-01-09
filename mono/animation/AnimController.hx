@@ -63,9 +63,9 @@ class AnimController {
 	
 	public function play(name:String, from:Int = 0) {
 		
-		if (anims == null) throw '$name anim was not added';
+		if (anims == null) throw '"$name" anim was not added';
 		currAnim = anims.get(name);
-		if (currAnim == null) throw '$name anim not found, or forgot to play()';
+		if (currAnim == null) throw '"$name" anim not found, or forgot to play()';
 		
 		if (from > -1) {
 			index = from;
