@@ -14,18 +14,27 @@ class RightTri extends Shape {
 	public var c(get, never):Point;
 	inline function get_c() { return center; }
 	
-	public function new(centerX:Float, centerY:Float, width:Float, height:Float) {
-		super(centerX, centerY);
+	inline function get_left() return Math.min(center.x, center.x + width);
+	inline function get_right() return Math.max(center.x, center.x + width);
+	inline function get_top() return Math.min(center.y, center.y + height);
+	inline function get_bottom() return Math.max(center.y, center.y + height);
+	
+	public function new(cornerX:Float, cornerY:Float, width:Float, height:Float) {
+		super(cornerX, cornerY);
 		
 		// maybe save wh and reconstruct ab in setter or get/never
 		
-		a = new Point(width + centerX, 0);
-		b = new Point(0, height + centerY);
+		a = new Point(width + cornerX, 0);
+		b = new Point(0, height + cornerY);
 		
 		type = RTRI;
 	}
 	
+	public function clone() {
+		return new RightTri(c.x, c.y, width, height);
+	}
+	
 	public function lerpC(x:Float) {
-		return b.y + height / width * (x - center.x);
+		return b.y - height / width * (x - center.x);
 	}
 }

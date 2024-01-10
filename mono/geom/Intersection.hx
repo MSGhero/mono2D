@@ -8,7 +8,7 @@ class Intersection {
 		return switch (shape.type) {
 			case CIRCLE: xyInCircle(x, y, cast shape, eps);
 			case RECT: xyInRect(x, y, cast shape, eps);
-			case RTRI: throw "not implemented";
+			case RTRI: xyInRTri(x, y, cast shape, eps);
 		}
 	}
 	
@@ -49,6 +49,15 @@ class Intersection {
 	
 	public static inline function xyInRect(x:Float, y:Float, rect:Rect, eps:Float = 0) {
 		return !(x < rect.left - eps || x > rect.right + eps || y < rect.top - eps || y > rect.bottom + eps);
+	}
+	
+	public static function pointInRTri(point:Point, tri:RightTri, eps:Float = 0) {
+		return xyInRTri(point.x, point.y, tri, eps);
+	}
+	
+	public static inline function xyInRTri(x:Float, y:Float, tri:RightTri, eps:Float = 0) {
+		final u = (x - tri.c.x) / tri.width, v = (y - tri.c.y) / tri.height;
+		return u >= -eps / Math.abs(tri.width) && v >= -eps / Math.abs(tri.height) && u + v <= 1 + eps / Math.abs(tri.width) + eps / Math.abs(tri.height);
 	}
 	
 	public static function xyInPoint(x:Float, y:Float, point:Point, eps:Float = 0) {
