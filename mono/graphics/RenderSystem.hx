@@ -15,8 +15,7 @@ class RenderSystem extends System {
 	
 	@:fastFamily
 	var sprites : {
-		sprite:Sprite,
-		batch:BatchID
+		sprite:Sprite
 	};
 	
 	var batchMap:StringMap<SpriteBatch>;
@@ -125,7 +124,7 @@ class RenderSystem extends System {
 	function onSprite(entity:Entity) {
 		
 		fetch(sprites, entity, {
-			batchMap.get(batch).add(sprite);
+			batchMap.get(sprite.batchID).add(sprite);
 		});
 	}
 }
