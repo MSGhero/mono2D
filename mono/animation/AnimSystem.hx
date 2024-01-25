@@ -2,13 +2,13 @@ package mono.animation;
 
 import haxe.ds.StringMap;
 import ecs.Entity;
-import h2d.Bitmap;
 import mono.timing.TimingCommand;
 import mono.command.Command;
 import ecs.Universe;
 import ecs.System;
 import mono.graphics.Sprite;
 import mono.animation.AnimCommand;
+import mono.graphics.Picture;
 
 class AnimSystem extends System {
 	
@@ -31,9 +31,9 @@ class AnimSystem extends System {
 	}
 	
 	@:fastFamily
-	var bitmapAnims : {
+	var pictureAnims : {
 		anim:AnimController,
-		bitmap:Bitmap
+		picture:Picture
 	}
 	
 	public function new(ecs:Universe) {
@@ -47,7 +47,7 @@ class AnimSystem extends System {
 		
 		anims.onEntityAdded.subscribe(handleAnim);
 		spriteAnims.onEntityAdded.subscribe(handleSpriteAnim);
-		bitmapAnims.onEntityAdded.subscribe(handleBitmapAnim);
+		pictureAnims.onEntityAdded.subscribe(handlePictureAnim);
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
 		Command.register(CREATE_ANIMATION(Entity.none, "", null, "", null), handleAC);
@@ -73,11 +73,11 @@ class AnimSystem extends System {
 		});
 	}
 	
-	function handleBitmapAnim(entity) {
+	function handlePictureAnim(entity) {
 		
-		fetch(bitmapAnims, entity, {
-			if (anim.currAnim != null) bitmap.tile = anim.currFrame;
-			anim.onFrame = () -> bitmap.tile = anim.currFrame;
+		fetch(pictureAnims, entity, {
+			if (anim.currAnim != null) picture.tile = anim.currFrame;
+			anim.onFrame = () -> picture.tile = anim.currFrame;
 		});
 	}
 	
