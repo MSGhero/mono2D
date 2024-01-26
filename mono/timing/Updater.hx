@@ -47,6 +47,10 @@ class Updater {
 		counter = 0;
 	}
 	
+	public inline function forceReady() {
+		counter = duration;
+	}
+	
 	public function forceCallback() {
 		
 		if (callback != null) callback();
