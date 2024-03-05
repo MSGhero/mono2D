@@ -30,6 +30,10 @@ class ConsumerSystem extends System {
 		
 		Command.register(APPLY_FROM_CONTEXT(null), handleCC);
 		Command.register(APPLY_TO_CONTEXT(null), handleCC);
+		
+		setup(consumers, {
+			Command.queue(INIT_CONTEXT(ctx)); // handled by implemented systems
+		});
 	}
 	
 	function handleCC(cc:ConsumerCommand) {
@@ -43,6 +47,7 @@ class ConsumerSystem extends System {
 				setup(consumers, {
 					f(ctx);
 				});
+			default:
 		}
 	}
 	
