@@ -19,6 +19,8 @@ class InputSystem extends System {
 		}
 	};
 	
+	// just store inputs in an array? i don't think input alone is used anywhere
+	
 	public function new(ecs:Universe) {
 		super(ecs);
 		

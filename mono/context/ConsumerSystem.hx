@@ -28,11 +28,22 @@ class ConsumerSystem extends System {
 	override function onEnabled() {
 		super.onEnabled();
 		
+		consumers.onEntityAdded.subscribe(handleConsumer);
+		
 		Command.register(APPLY_FROM_CONTEXT(null), handleCC);
 		Command.register(APPLY_TO_CONTEXT(null), handleCC);
 		
 		setup(consumers, {
 			Command.queue(INIT_CONTEXT(ctx)); // handled by implemented systems
+		});
+	}
+	
+	function handleConsumer(entity) {
+		
+		fetch(consumers, entity, {
+			setup(consumers, {
+				consumer.setCtx(ctx);
+			});
 		});
 	}
 	
@@ -49,15 +60,5 @@ class ConsumerSystem extends System {
 				});
 			default:
 		}
-	}
-	
-	override function update(dt:Float) {
-		super.update(dt);
-		
-		setup(consumers, {
-			iterate(consumers, {
-				consumer.update(ctx);
-			});
-		});
 	}
 }
