@@ -1,0 +1,2 @@
+{% for sprite in allSprites %}"{% if settings.trimSpriteNames %}{{sprite.trimmedName}}{% else %}{{sprite.fullName}}{% endif %}" f({{sprite.frameRect.x}},{{sprite.frameRect.y}},{{sprite.frameRect.width}},{{sprite.frameRect.height}}) o({{sprite.sourceRect.x}},{{sprite.sourceRect.y}}) s({{sprite.untrimmedSize.width}},{{sprite.untrimmedSize.height}}){% if settings.writePivotPoints %} p({{sprite.pivotPointNorm.x}},{{sprite.pivotPointNorm.y}}){% endif %}
+{% endfor %}

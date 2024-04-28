@@ -12,7 +12,13 @@ abstract Spritesheet(StringMap<Tile>) {
 		this = new StringMap();
 	}
 	
-	public function loadTexturePackerData(sheet:Image, jsonString:String, sheetRef:String = "") {
+	public function loadTexturePackerData(sheet:Image, data:String, sheetRef:String = "") {
+		return
+			if (data.charCodeAt(0) == '{'.code) loadTexturePackerJson(sheet, data, sheetRef);
+			else loadTexturePackerMini(sheet, data, sheetRef);
+	}
+	
+	public function loadTexturePackerJson(sheet:Image, jsonString:String, sheetRef:String = "") {
 		
 		var sheetTile = sheet.toTile();
 		var tpData:TexturePackerData = Json.parse(jsonString);
@@ -32,30 +38,33 @@ abstract Spritesheet(StringMap<Tile>) {
 		var sheetTile = sheet.toTile();
 		if (sheetRef.length > 0) this.set(sheetRef, sheetTile); // add the whole sheet rect to the spritesheet, for ref
 		
-		var lines = ~/[\r\n]+/.split(minifiedString);
+		var lines = ~/[\r\n]+/g.split(minifiedString);
 		
 		// name frame(x,y,w,h) offset(x,y) source(w,h) pivot(x,y)
 		// pivot optional
+		// // comments within the file
 		
 		var props, name, frames, offset, source, pivot, defaultPivot = ["0", "0"];
 		for (line in lines) {
-			props = line.split(" ");
 			
-			name = "";
+			if (line.charCodeAt(0) == '/'.code) continue; // comment
+			if (line.length <= 0) continue;
+			
+			name = line.substring(line.indexOf('"') + 1, line.indexOf('"', 1));
+			props = line.substr(name.length + 3).split(" ");
+			
 			frames = offset = source = pivot = null;
 			
 			for (prop in props) {
 				switch (prop) {
-					case _.substr(0, 5) => "frame":
-						frames = prop.substring(6, prop.length - 1).split(",");
-					case _.substr(0, 6) => "offset":
-						offset = prop.substring(7, prop.length - 1).split(",");
-					case _.substr(0, 6) => "source":
-						source = prop.substring(7, prop.length - 1).split(",");
-					case _.substr(0, 5) => "pivot":
-						pivot = prop.substr(6, prop.length - 1).split(",");
-					default:
-						name = prop;
+					case _.charCodeAt(0) => 'f'.code:
+						frames = prop.substring(2, prop.length - 1).split(",");
+					case _.charCodeAt(0) => 'o'.code:
+						offset = prop.substring(2, prop.length - 1).split(",");
+					case _.charCodeAt(0) => 's'.code:
+						source = prop.substring(2, prop.length - 1).split(",");
+					case _.charCodeAt(0) => 'p'.code:
+						pivot = prop.substr(2, prop.length - 1).split(",");
 				}
 			}
 			
