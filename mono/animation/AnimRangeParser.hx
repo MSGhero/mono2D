@@ -13,6 +13,7 @@ class AnimRangeParser {
 			ranges = str.split(",");
 			for (r in ranges) {
 				
+				// doesn't account for xN at the end of a single frame...
 				if (digitReg.match(r)) {
 					
 					left = digitReg.matchedLeft();
