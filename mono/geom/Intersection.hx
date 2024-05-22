@@ -40,7 +40,7 @@ class Intersection {
 	}
 	
 	public static inline function xyInCircle(x:Float, y:Float, circle:Circle, eps:Float = 0) {
-		return Math.abs((x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y) - circle.radius * circle.radius) < eps * eps;
+		return Math.abs((x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y) - (circle.radius + eps) * (circle.radius + eps)) < 0.0;
 	}
 	
 	public static function pointInRect(point:Point, rect:Rect, eps:Float = 0) {
@@ -61,6 +61,7 @@ class Intersection {
 	}
 	
 	public static function xyInPoint(x:Float, y:Float, point:Point, eps:Float = 0) {
+		// negative eps is degenerate here, account for that or just use abs?
 		return (x - point.x) * (x - point.x) + (y - point.y) * (y - point.y) < eps * eps;
 	}
 	
@@ -69,7 +70,7 @@ class Intersection {
 	}
 	
 	public static function circleCircle(circle1:Circle, circle2:Circle, eps:Float = 0) {
-		return (circle1.x - circle2.x) * (circle1.x - circle2.x) + (circle1.y - circle2.y) * (circle1.y - circle2.y) - (circle1.radius + circle2.radius) * (circle1.radius + circle2.radius) < eps * eps;
+		return (circle1.x - circle2.x) * (circle1.x - circle2.x) + (circle1.y - circle2.y) * (circle1.y - circle2.y) - (circle1.radius + circle2.radius + eps) * (circle1.radius + circle2.radius + eps) < 0.0;
 	}
 	
 	public static function rectRect(rect1:Rect, rect2:Rect, eps:Float = 0) {
@@ -82,6 +83,6 @@ class Intersection {
 		final dx = circle.x - Math.max(rect.left, Math.min(circle.x, rect.right));
 		final dy = circle.y - Math.max(rect.top, Math.min(circle.y, rect.bottom));
 		
-		return dx * dx + dy * dy - circle.radius * circle.radius < eps * eps;
+		return dx * dx + dy * dy - (circle.radius + eps) * (circle.radius + eps) < 0.0;
 	}
 }
