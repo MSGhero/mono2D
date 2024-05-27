@@ -13,15 +13,13 @@ import mono.graphics.Picture;
 class AnimSystem extends System {
 	
 	@:fullFamily
-	var animInfo : {
+	var anims : {
 		resources : {
 			sheetMap:StringMap<Spritesheet>
+		},
+		requires : {
+			anim:AnimController
 		}
-	}
-	
-	@:fastFamily
-	var anims : {
-		anim:AnimController
 	}
 	
 	@:fastFamily
@@ -85,12 +83,12 @@ class AnimSystem extends System {
 		
 		switch (ac) {
 			case ADD_SHEET(sheet, id):
-				setup(animInfo, {
+				setup(anims, {
 					sheetMap.set(id, sheet);
 				});
 			case CREATE_ANIMATION(entity, from, animReqs, play, optionalController):
 				
-				setup(animInfo, {
+				setup(anims, {
 					var newAnim:AnimController = null;
 					
 					fetch(anims, entity, {
@@ -109,7 +107,7 @@ class AnimSystem extends System {
 				
 			case CREATE_ANIMATIONS(entities, from, animReqs, play):
 				
-				setup(animInfo, {
+				setup(anims, {
 					
 					final firstAnim = new AnimController();
 					final sheet = sheetMap.get(from);
@@ -135,7 +133,7 @@ class AnimSystem extends System {
 				
 			case CREATE_FRAME_ANIM(entity, from, frameName):
 				
-				setup(animInfo, {
+				setup(anims, {
 					var newAnim:AnimController = null;
 					
 					fetch(anims, entity, {

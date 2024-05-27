@@ -43,6 +43,15 @@ abstract Command(EnumValue) from EnumValue to EnumValue {
 	}
 	
 	/**
+	 * Immediately execute any enum value as a Command (not during CommandSystem's update())
+	 * @param command Any enum value
+	 */
+	public static inline function now(command:Command) {
+		@:privateAccess(CommandSystem)
+		CommandSystem._cmdSys.now(command);
+	}
+	
+	/**
 	 * Register a callback to be executed whenever the specified Command is found in the queue
 	 * @param type Any enum value. The values of the parameters do not matter here
 	 * @param callback A callback that will receive the queued `type` Command as an argument

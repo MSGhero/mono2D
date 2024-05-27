@@ -42,6 +42,12 @@ class CommandSystem extends System {
 		}
 	}
 	
+	inline function now(comm:Command) {
+		var fs = commandMap.get(comm);
+		if (fs == null) trace('Enum command not registered: $comm'); // shouldn't throw since maybe no one is using that command
+		else for (f in fs) f(comm);
+	}
+	
 	inline function enqueue(comm:Command) {
 		
 		setup(commands, {

@@ -37,6 +37,7 @@ class InputSystem extends System {
 		Command.register(UNREGISTER_INPUT(Entity.none, ""), handleInput);
 		Command.register(ENABLE_INPUT(""), handleInput);
 		Command.register(DISABLE_INPUT(""), handleInput);
+		Command.register(RAW_INPUT(null), handleInput);
 	}
 	
 	function handleInput(ic:InputCommand) {
@@ -63,6 +64,10 @@ class InputSystem extends System {
 			case DISABLE_INPUT(id):
 				setup(inputs, {
 					inputMap.get(id).enabled = false;
+				});
+			case RAW_INPUT(f):
+				setup(inputs, {
+					f(inputMap);
 				});
 			default:
 		}
