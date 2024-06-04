@@ -59,17 +59,19 @@ class AnimRangeParser {
 		final arr = dashes.split(range);
 		final min = Std.parseInt(arr[0]);
 		final max = Std.parseInt(arr[1]);
+		final lenMin = arr[0].length;
+		final lenMax = arr[1].length;
 		
 		if (min < max) {
 			for (i in min...max + 1) {
-				a.push(prefix + i);
+				a.push(prefix + StringTools.lpad(Std.string(i), "0", lenMin));
 			}
 		}
 		
 		else {
 			var i = min + 1;
 			while (i-- > max) {
-				a.push(prefix + i);
+				a.push(prefix + StringTools.lpad(Std.string(i), "0", lenMax));
 			}
 		}
 	}
