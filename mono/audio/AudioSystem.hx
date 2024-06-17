@@ -125,12 +125,16 @@ class AudioSystem extends System {
 			case ADJUST_VOLUME(delta, callback):
 				setup(audio, {
 					volumeInfo.master = Math.max(0, Math.min(1, volumeInfo.master + delta));
+					if (volumeInfo.master <= 0 && !volumeInfo.muted) manager.suspended = volumeInfo.muted = true;
+					else if (volumeInfo.master > 0 && volumeInfo.muted) manager.suspended = volumeInfo.muted = false;
 					manager.masterVolume = volumeInfo.master;
 					if (callback != null) callback(volumeInfo.master);
 				});
 			case SET_VOLUME(vol, callback):
 				setup(audio, {
 					volumeInfo.master = Math.max(0, Math.min(1, vol));
+					if (volumeInfo.master <= 0 && !volumeInfo.muted) manager.suspended = volumeInfo.muted = true;
+					else if (volumeInfo.master > 0 && volumeInfo.muted) manager.suspended = volumeInfo.muted = false;
 					manager.masterVolume = volumeInfo.master;
 					if (callback != null) callback(volumeInfo.master);
 				});
