@@ -15,7 +15,7 @@ class AnimRequest {
 	
 	function fulfill(sheet:Spritesheet) {
 		
-		for (name in frameNames) if (!sheet.exists(name)) throw 'Frame $name not found';
+		for (name in frameNames) if (!sheet.exists(name)) throw 'Frame "$name" not found';
 		
 		return ({
 			name : name,
