@@ -25,6 +25,9 @@ class AnimController {
 	public var isComplete(get, never):Bool;
 	inline function get_isComplete() { return updater.isComplete; }
 	
+	public var isReady(get, never):Bool;
+	inline function get_isReady() { return anims != null; }
+	
 	public var name(get, never):String;
 	inline function get_name() { return currAnim.name; }
 	
