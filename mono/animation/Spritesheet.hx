@@ -27,7 +27,7 @@ abstract Spritesheet(StringMap<Tile>) {
 		
 		for (tpt in tpData.frames) {
 			tpt.pivot ??= { x : 0, y : 0 };
-			this.set(tpt.filename, sheetTile.sub(tpt.frame.x, tpt.frame.y, tpt.frame.w, tpt.frame.h, tpt.spriteSourceSize.x - tpt.pivot.x * tpt.sourceSize.w, tpt.spriteSourceSize.y - tpt.pivot.y * tpt.sourceSize.h));
+			this.set(tpt.filename, sheetTile.sub(tpt.frame.x, tpt.frame.y, tpt.frame.w, tpt.frame.h, Math.ceil(tpt.spriteSourceSize.x - tpt.pivot.x * tpt.sourceSize.w), Math.ceil(tpt.spriteSourceSize.y - tpt.pivot.y * tpt.sourceSize.h)));
 		}
 		
 		return this;
@@ -91,8 +91,8 @@ abstract Spritesheet(StringMap<Tile>) {
 			this.set(name, sheetTile.sub(
 				Std.parseInt(frames[0]), Std.parseInt(frames[1]),
 				Std.parseInt(frames[2]), Std.parseInt(frames[3]),
-				Std.parseInt(offset[0]) - Std.parseFloat(pivot[0]) * Std.parseInt(source[0]),
-				Std.parseInt(offset[1]) - Std.parseFloat(pivot[1]) * Std.parseInt(source[1])
+				Math.ceil(Std.parseInt(offset[0]) - Std.parseFloat(pivot[0]) * Std.parseInt(source[0])),
+				Math.ceil(Std.parseInt(offset[1]) - Std.parseFloat(pivot[1]) * Std.parseInt(source[1]))
 			));
 		}
 		
