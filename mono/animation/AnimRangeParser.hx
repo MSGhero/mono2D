@@ -2,6 +2,25 @@ package mono.animation;
 
 class AnimRangeParser {
 	
+	public static function parseText(text:String) {
+		
+		final crlf = ~/[\r\n]+/g;
+		final lines = crlf.split(text);
+		var firstSpace, prefix;
+		for (line in lines) {
+			
+			if (line.charCodeAt(0) != '\t'.code) {
+				firstSpace = line.indexOf(" ");
+				if (firstSpace < 0) prefix = line;
+				else prefix = line.substring(0, firstSpace);
+			}
+			
+			else {
+				
+			}
+		}
+	}
+	
 	public static function parseRanges(list:Array<String>) {
 		
 		var ranges;
@@ -75,4 +94,12 @@ class AnimRangeParser {
 			}
 		}
 	}
+}
+
+private enum abstract ParseState(Int) {
+	var FIND_PREFIX;
+	var FIND_NAME;
+	var FIND_FRAMES;
+	var FIND_LOOP;
+	var FIND_FPS;
 }
