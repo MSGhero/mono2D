@@ -1,5 +1,6 @@
 package mono.animation;
 
+import hxd.Res;
 import haxe.ds.StringMap;
 import ecs.Entity;
 import mono.timing.TimingCommand;
@@ -34,9 +35,12 @@ class AnimSystem extends System {
 		picture:Picture
 	}
 	
+	var protoController:AnimController;
+	
 	public function new(ecs:Universe) {
 		super(ecs);
 		
+		protoController = new AnimController();
 		ecs.setResources(new StringMap<Spritesheet>());
 	}
 	
@@ -48,6 +52,7 @@ class AnimSystem extends System {
 		pictureAnims.onEntityAdded.subscribe(handlePictureAnim);
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
+		Command.register(PARSE_ANIMS(null, ""), handleAC);
 		Command.register(CREATE_ANIMATION(Entity.none, "", null, "", null), handleAC);
 		Command.register(CREATE_ANIMATIONS(null, "", null, ""), handleAC);
 		Command.register(CREATE_FRAME_ANIM(Entity.none, "", ""), handleAC);
@@ -59,6 +64,7 @@ class AnimSystem extends System {
 	function handleAnim(entity) {
 		
 		fetch(anims, entity, {
+			anim.refAnimsFrom(protoController);
 			Command.queue(ADD_UPDATER(entity, anim.updater));
 		});
 	}
@@ -85,6 +91,17 @@ class AnimSystem extends System {
 			case ADD_SHEET(sheet, id):
 				setup(anims, {
 					sheetMap.set(id, sheet);
+				});
+			case PARSE_ANIMS(paths, sheetID):
+				setup(anims, {
+					final sheet = sheetMap.get(sheetID);
+					var reqs;
+					for (path in paths) {
+						reqs = AnimParser.parseText(Res.load(path).entry.getText());
+						for (req in reqs) {
+							protoController.add(req.fulfill(sheet));
+						}
+					}
 				});
 			case CREATE_ANIMATION(entity, from, animReqs, play, optionalController):
 				

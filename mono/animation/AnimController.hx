@@ -37,6 +37,9 @@ class AnimController {
 	var anims:StringMap<Animation>;
 	var currAnim:Animation;
 	
+	var queuedPlayName:String;
+	var queuedPlayFrom:Int;
+	
 	public function new() {
 		
 		updater = new Updater(0, -1, false);
@@ -46,6 +49,9 @@ class AnimController {
 		anims = null;
 		currAnim = null;
 		onFrame = null;
+		
+		queuedPlayName = "";
+		queuedPlayFrom = -1;
 	}
 	
 	public function add(anim:Animation) {
@@ -61,12 +67,24 @@ class AnimController {
 	}
 	
 	public function refAnimsFrom(ac:AnimController) {
+		
 		anims = ac.anims;
+		
+		if (anims != null && queuedPlayName.length > 0) {
+			play(queuedPlayName, queuedPlayFrom);
+			queuedPlayName = "";
+			queuedPlayFrom = -1;
+		}
 	}
 	
 	public function play(name:String, from:Int = 0) {
 		
-		if (anims == null) throw '"$name" anim was not added';
+		if (anims == null) {
+			queuedPlayName = name;
+			queuedPlayFrom = from;
+			return;
+		}
+		
 		currAnim = anims.get(name);
 		if (currAnim == null) throw '"$name" anim not found, or forgot to play()';
 		

@@ -31,8 +31,11 @@ class AnimParser {
 						else prefix = line.substring(0, spaceIndex);
 					}
 					
-					// else keep old prefix
-					spaceIndex = -1;
+					else {
+						// keep old prefix
+						spaceIndex = -1;
+					}
+					
 					state = FIND_NAME;
 					
 				case FIND_NAME:
