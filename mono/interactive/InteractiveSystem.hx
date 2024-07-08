@@ -117,7 +117,7 @@ class InteractiveSystem extends System {
 			fetch(interactives, currentOver, {
 				if (interactive.onSelect != null) {
 					iterate(inputs, {
-						if (input.justPressed.SELECT) interactive.onSelect();
+						if (input.justPressed.MOUSE) interactive.onSelect(); // this isn't great tbh
 					});
 				}
 			});
