@@ -34,18 +34,21 @@ class AnimController {
 	var onFrame:()->Void; // maybe make a signal/event dispatcher if strong need to use elsewhere
 	
 	var updater:Updater;
+	
+	var prefix:String;
 	var anims:StringMap<Animation>;
 	var currAnim:Animation;
 	
 	var queuedPlayName:String;
 	var queuedPlayFrom:Int;
 	
-	public function new() {
+	public function new(animPrefix:String = "") {
 		
 		updater = new Updater(0, -1, false);
 		updater.callback = advance;
 		allowLoop = true;
 		
+		prefix = animPrefix + "_";
 		anims = null;
 		currAnim = null;
 		onFrame = null;
@@ -85,8 +88,8 @@ class AnimController {
 			return;
 		}
 		
-		currAnim = anims.get(name);
-		if (currAnim == null) throw '"$name" anim not found, or forgot to play()';
+		currAnim = anims.get(prefix + name);
+		if (currAnim == null) throw '"$prefix$name" anim not found';
 		
 		if (from > -1) {
 			index = from;
