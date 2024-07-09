@@ -53,12 +53,7 @@ class AnimSystem extends System {
 		
 		Command.register(ADD_SHEET(null, ""), handleAC);
 		Command.register(PARSE_ANIMS(null, ""), handleAC);
-		Command.register(CREATE_ANIMATION(Entity.none, "", null, "", null), handleAC);
-		Command.register(CREATE_ANIMATIONS(null, "", null, ""), handleAC);
-		Command.register(CREATE_FRAME_ANIM(Entity.none, "", ""), handleAC);
-		Command.register(PLAY_ANIMATION(Entity.none, ""), handleAC);
-		Command.register(PLAY_ANIMATION_FROM(Entity.none, "", 0), handleAC);
-		Command.register(COPY_ANIMATIONS(Entity.none, Entity.none, ""), handleAC);
+		Command.register(ADD_ANIMS(null, ""), handleAC);
 	}
 	
 	function handleAnim(entity) {
@@ -103,93 +98,12 @@ class AnimSystem extends System {
 						}
 					}
 				});
-			case CREATE_ANIMATION(entity, from, animReqs, play, optionalController):
-				
+			case ADD_ANIMS(animReqs, sheetID):
 				setup(anims, {
-					var newAnim:AnimController = null;
-					
-					fetch(anims, entity, {
-						// if animcontroller already exists, add to it instead
-						newAnim = anim;
-					});
-					
-					if (newAnim == null) newAnim = optionalController ?? new AnimController();
-					
-					final sheet = sheetMap.get(from);
-					for (req in animReqs) newAnim.add(req.fulfill(sheet));
-					
-					if (play != null && play.length > 0) newAnim.play(play);
-					if (optionalController == null) universe.setComponents(entity, newAnim);
-				});
-				
-			case CREATE_ANIMATIONS(entities, from, animReqs, play):
-				
-				setup(anims, {
-					
-					final firstAnim = new AnimController();
-					final sheet = sheetMap.get(from);
-					for (req in animReqs) firstAnim.add(req.fulfill(sheet));
-					
-					var entity, newAnim;
-					for (i in 0...entities.length) {
-						entity = entities[i];
-						
-						if (i == 0) {
-							newAnim = firstAnim;
-						}
-						
-						else {
-							newAnim = new AnimController();
-							newAnim.copyFrom(firstAnim);
-						}
-						
-						if (play != null && play.length > 0) newAnim.play(play);
-						universe.setComponents(entity, newAnim);
+					final sheet = sheetMap.get(sheetID);
+					for (req in animReqs) {
+						protoController.add(req.fulfill(sheet));
 					}
-				});
-				
-			case CREATE_FRAME_ANIM(entity, from, frameName):
-				
-				setup(anims, {
-					var newAnim:AnimController = null;
-					
-					fetch(anims, entity, {
-						// if animcontroller already exists, add to it instead
-						newAnim = anim;
-					});
-					
-					newAnim = newAnim ?? new AnimController();
-					
-					final sheet = sheetMap.get(from);
-					final req:AnimRequest = {
-						name : "default",
-						frameNames : [frameName],
-						loop : false
-					};
-					
-					newAnim.add(req.fulfill(sheet));
-					newAnim.play("default");
-					universe.setComponents(entity, newAnim);
-				});
-				
-			case PLAY_ANIMATION(entity, play):
-				fetch(anims, entity, {
-					anim.play(play);
-				});
-			
-				
-			case PLAY_ANIMATION_FROM(entity, play, from):
-				fetch(anims, entity, {
-					anim.play(play, from);
-				});
-			
-			case COPY_ANIMATIONS(entity, from, play):
-				
-				fetch(anims, from, {
-					final newAnim = new AnimController();
-					newAnim.refAnimsFrom(anim);
-					if (play != null && play.length > 0) newAnim.play(play);
-					universe.setComponents(entity, newAnim);
 				});
 		}
 	}
