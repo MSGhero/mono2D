@@ -29,7 +29,7 @@ class AnimController {
 	inline function get_isReady() { return anims != null; }
 	
 	public var name(get, never):String;
-	inline function get_name() { return currAnim.name; }
+	inline function get_name() { return currAnim.name.substr(prefix.length); }
 	
 	var onFrame:()->Void; // maybe make a signal/event dispatcher if strong need to use elsewhere
 	
