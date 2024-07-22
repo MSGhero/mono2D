@@ -13,7 +13,7 @@ class StateSystem extends System {
 	
 	var enterNotifs:IntMap<Array<()->Void>>;
 	var exitNotifs:IntMap<Array<()->Void>>;
-	var triggerNotifs:StringMap<Array<()->Void>>;
+	var triggerNotifs:StringMap<Array<(message:String)->Void>>;
 	
 	public function new(ecs:Universe) {
 		super(ecs);
@@ -34,7 +34,7 @@ class StateSystem extends System {
 		Command.register(REGISTER_TRIGGER("", null), handleSC);
 		Command.register(ENTER(0), handleSC);
 		Command.register(EXIT(0), handleSC);
-		Command.register(TRIGGER(""), handleSC);
+		Command.register(TRIGGER("", ""), handleSC);
 	}
 	
 	function handleSC(sc:StateCommand) {
@@ -58,9 +58,9 @@ class StateSystem extends System {
 			case EXIT(state):
 				states.get(state).exit();
 				for (cb in exitNotifs.get(state)) cb();
-			case TRIGGER(type):
+			case TRIGGER(type, message):
 				var arr = triggerNotifs.get(type);
-				if (arr != null) for (cb in arr) cb();
+				if (arr != null) for (cb in arr) cb(message);
 		}
 	}
 }
