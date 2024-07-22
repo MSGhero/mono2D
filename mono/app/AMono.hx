@@ -13,7 +13,7 @@ abstract class AMono {
 	}
 	
 	abstract function prepECS():Void;
-	abstract function postInit():Void;
+	abstract function postPreload():Void;
 	
 	public function update(dt:Float) {
 		stage.update(dt);
