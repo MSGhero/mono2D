@@ -89,7 +89,7 @@ class AudioSystem extends System {
 					}
 					
 					channel.position = info.position;
-					universe.setComponents(universe.createEntity(), channel, info);
+					// universe.setComponents(universe.createEntity(), channel, info);
 				});
 			case STOP_BY_TYPE(type):
 				switch (type) {
