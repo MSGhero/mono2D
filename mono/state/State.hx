@@ -23,4 +23,6 @@ abstract class State {
 	public function exit() {
 		active = false;
 	}
+	
+	public function update() { }
 }

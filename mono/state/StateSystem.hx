@@ -63,4 +63,10 @@ class StateSystem extends System {
 				if (arr != null) for (cb in arr) cb(message);
 		}
 	}
+	
+	override function update(dt:Float) {
+		super.update(dt);
+		
+		for (state in states) if (state.active) state.update();
+	}
 }
