@@ -7,12 +7,17 @@ class AnimParser {
 		final crlf = ~/[\r\n]+/g;
 		final lines = crlf.split(text);
 		var spaceIndex = -1, bracketIndex = -1, rbIndex = -1, prefix = "", name = "", frames = "", frameIndex = -1, loop = false, fps = -1, state = FIND_PREFIX, line = "";
-		var i = 0;
+		var i = 0, reindex = true;
 		
 		var reqs:Array<AnimRequest> = [];
 		
 		while (i < lines.length) {
-			line = StringTools.rtrim(lines[i]); // could be reworked
+			
+			if (reindex) {
+				line = StringTools.rtrim(lines[i]);
+				reindex = false;
+			}
+			
 			if (line.length <= 0) continue;
 			
 			switch (state) {
@@ -26,6 +31,7 @@ class AnimParser {
 						if (spaceIndex < 0) {
 							prefix = line;
 							i++;
+							reindex = true;
 						}
 						
 						else prefix = line.substring(0, spaceIndex);
@@ -72,6 +78,7 @@ class AnimParser {
 						bracketIndex = -1;
 						frameIndex = 2;
 						i++;
+						reindex = true;
 					}
 					
 					else if (rbIndex < frameIndex) {
@@ -105,6 +112,7 @@ class AnimParser {
 					
 					state = FIND_PREFIX;
 					i++;
+					reindex = true;
 					
 					reqs.push({
 						name : prefix + "_" + name,
