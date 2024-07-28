@@ -65,6 +65,7 @@ abstract Spritesheet(StringMap<Tile>) {
 						source = prop.substring(2, prop.length - 1).split(",");
 					case _.charCodeAt(0) => 'p'.code:
 						pivot = prop.substr(2, prop.length - 1).split(",");
+					default:
 				}
 			}
 			
