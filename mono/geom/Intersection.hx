@@ -9,6 +9,7 @@ class Intersection {
 			case CIRCLE: xyInCircle(x, y, cast shape, eps);
 			case RECT: xyInRect(x, y, cast shape, eps);
 			case RTRI: xyInRTri(x, y, cast shape, eps);
+			case INV_CIRCLE: xyInICircle(x, y, cast shape, eps);
 		}
 	}
 	
@@ -23,15 +24,24 @@ class Intersection {
 					case CIRCLE: circleCircle(cast shape1, cast shape2, eps);
 					case RECT: circleRect(cast shape1, cast shape2, eps);
 					case RTRI: throw "not implemented";
+					case INV_CIRCLE: circleICircle(cast shape1, cast shape2, eps);
 				}
 			case RECT:
 				switch (shape2.type) {
 					case CIRCLE: circleRect(cast shape2, cast shape1, eps);
 					case RECT: rectRect(cast shape1, cast shape2, eps);
 					case RTRI: throw "not implemented";
+					case INV_CIRCLE: throw "not implemented";
 				}
 			case RTRI:
 				throw "not implemented";
+			case INV_CIRCLE:
+				switch (shape2.type) {
+					case CIRCLE: circleICircle(cast shape2, cast shape1, eps);
+					case RECT: throw "not implemented";
+					case RTRI: throw "not implemented";
+					case INV_CIRCLE: true;
+				}
 		}
 	}
 	
@@ -41,6 +51,10 @@ class Intersection {
 	
 	public static inline function xyInCircle(x:Float, y:Float, circle:Circle, eps:Float = 0) {
 		return Math.abs((x - circle.x) * (x - circle.x) + (y - circle.y) * (y - circle.y) - (circle.radius + eps) * (circle.radius + eps)) < 0.0;
+	}
+	
+	public static inline function xyInICircle(x:Float, y:Float, circle:Circle, eps:Float = 0) {
+		return !xyInCircle(x, y, circle, -eps);
 	}
 	
 	public static function pointInRect(point:Point, rect:Rect, eps:Float = 0) {
@@ -71,6 +85,10 @@ class Intersection {
 	
 	public static function circleCircle(circle1:Circle, circle2:Circle, eps:Float = 0) {
 		return (circle1.x - circle2.x) * (circle1.x - circle2.x) + (circle1.y - circle2.y) * (circle1.y - circle2.y) - (circle1.radius + circle2.radius + eps) * (circle1.radius + circle2.radius + eps) < 0.0;
+	}
+	
+	public static function circleICircle(circle:Circle, icircle:InvCircle, eps:Float = 0) {
+		return (circle.x - icircle.x) * (circle.x - icircle.x) + (circle.y - icircle.y) * (circle.y - icircle.y) - (icircle.radius - circle.radius - eps) * (icircle.radius - circle.radius - eps) > 0.0;
 	}
 	
 	public static function rectRect(rect1:Rect, rect2:Rect, eps:Float = 0) {

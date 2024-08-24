@@ -37,4 +37,5 @@ enum ShapeType {
 	CIRCLE;
 	RECT;
 	RTRI;
+	INV_CIRCLE;
 }
