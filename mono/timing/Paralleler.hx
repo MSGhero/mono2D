@@ -31,6 +31,10 @@ class Paralleler extends Updater {
 		updaters.push(up);
 	}
 	
+	public inline function remove(up:Updater) {
+		updaters.remove(up);
+	}
+	
 	override function update(dt:Float) {
 		
 		if (isActive) {

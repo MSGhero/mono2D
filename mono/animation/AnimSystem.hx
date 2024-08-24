@@ -48,6 +48,7 @@ class AnimSystem extends System {
 		super.onEnabled();
 		
 		anims.onEntityAdded.subscribe(handleAnim);
+		anims.onEntityRemoved.subscribe(removeAnim);
 		spriteAnims.onEntityAdded.subscribe(handleSpriteAnim);
 		pictureAnims.onEntityAdded.subscribe(handlePictureAnim);
 		
@@ -61,6 +62,13 @@ class AnimSystem extends System {
 		fetch(anims, entity, {
 			anim.refAnimsFrom(protoController);
 			Command.queue(ADD_UPDATER(entity, anim.updater));
+		});
+	}
+	
+	function removeAnim(entity) {
+		
+		fetch(anims, entity, {
+			Command.queue(REMOVE_UPDATER(entity, anim.updater));
 		});
 	}
 	

@@ -22,6 +22,7 @@ class TimingSystem extends System {
 		super.onEnabled();
 		
 		Command.register(TimingCommand.ADD_UPDATER(Entity.none, null), handleTC);
+		Command.register(TimingCommand.REMOVE_UPDATER(Entity.none, null), handleTC);
 		Command.register(TimingCommand.CALL(null), handleTC);
 	}
 	
@@ -31,6 +32,8 @@ class TimingSystem extends System {
 			case ADD_UPDATER(entity, updater):
 				if (entity == Entity.none) entity = universe.createEntity();
 				getUpdaters(entity).push(updater);
+			case REMOVE_UPDATER(entity, updater):
+				getUpdaters(entity).remove(updater);
 			case CALL(func):
 				if (func != null) func();
 		}
