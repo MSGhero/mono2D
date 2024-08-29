@@ -61,14 +61,14 @@ class AnimSystem extends System {
 		
 		fetch(anims, entity, {
 			anim.refAnimsFrom(protoController);
-			Command.queue(ADD_UPDATER(entity, anim.updater));
+			//Command.queue(ADD_UPDATER(entity, anim.updater));
 		});
 	}
 	
 	function removeAnim(entity) {
 		
 		fetch(anims, entity, {
-			Command.queue(REMOVE_UPDATER(entity, anim.updater));
+			//Command.queue(REMOVE_UPDATER(entity, anim.updater));
 		});
 	}
 	
