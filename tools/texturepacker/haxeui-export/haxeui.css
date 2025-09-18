@@ -1,0 +1,7 @@
+{% for sprite in allSprites %}._{% if settings.trimSpriteNames %}{{sprite.trimmedName}}{% else %}{{sprite.fullName}}{% endif %} {
+	background-image-clip : {{ sprite.frameRect.y }} {{ sprite.frameRect.x }} {{ sprite.frameRect.height|add:sprite.frameRect.y }} {{ sprite.frameRect.width|add:sprite.frameRect.x }};
+	background-position-x : {{ sprite.sourceRect.x }};
+	background-position-y : {{ sprite.sourceRect.y }};
+}
+
+{% endfor %}

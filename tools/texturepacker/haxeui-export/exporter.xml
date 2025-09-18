@@ -1,0 +1,66 @@
+<exporter version="1.0">
+    <!-- identifier of the exporter -->
+    <name>HaxeUI</name>
+	
+    <!-- display name of the exporter for the combo box -->
+    <displayName>HaxeUI CSS</displayName>
+	
+    <!-- description of the exporter -->
+    <description>Exporter for HaxeUI CSS</description>
+
+    <!-- exporter version -->
+    <version>1.0</version>
+	
+    <files>
+        <file>
+            <!-- name of this file variable -->
+            <name>datafile</name>
+
+            <!-- human readable name (for GUI) -->
+            <displayName>CSS file</displayName>
+
+            <!-- file extension for the file -->
+            <fileExtension>css</fileExtension>
+
+            <!-- description what the file contains, used in tooltips in the GUI -->
+            <description>HaxeUI CSS</description>
+
+            <!-- name of the template file -->
+            <template>haxeui.css</template>
+        </file>
+    </files>
+
+    <!-- target framework supports trimming -->
+    <supportsTrimming>true</supportsTrimming>
+
+    <!-- target framework supports rotated sprites -->
+    <supportsRotation>false</supportsRotation>
+
+    <!-- rotated sprites direction (cw/ccw) -->
+    <rotationDirection>cw</rotationDirection>
+
+    <!-- supports npot sizes -->
+    <supportsNPOT>true</supportsNPOT>
+    
+    <!-- supports pivot points -->
+    <supportsPivotPoint>true</supportsPivotPoint>
+
+    <!-- supports file name stripping (remove .png etc) -->
+    <supportsTrimSpriteNames>true</supportsTrimSpriteNames>
+
+    <!-- supports texture subpath -->
+    <supportsTextureSubPath>true</supportsTextureSubPath>
+    
+	<!-- default values, applied when the exporter is activated in the UI or command line -->
+	<defaults>
+		<!-- this is currently only a subset of settings -->
+		<extrude>1</extrude>
+		<shapePadding>0</shapePadding>
+		<borderPadding>0</borderPadding>
+		<trimMode>Trim</trimMode>
+		<writePivotPoints>true</writePivotPoints>
+		<defaultPivotPoint>0.0,0.0</defaultPivotPoint>
+		<sizeConstraints>AnySize</sizeConstraints>
+	</defaults>
+ 
+</exporter>
