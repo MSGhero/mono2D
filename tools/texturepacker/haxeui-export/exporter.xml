@@ -78,6 +78,20 @@
                  in front of Data settings) -->
             <isAdvanced>true</isAdvanced>
         </property>
+        <property>
+            <!-- Property name, used in tps file + exporter template: -->
+            <name>sheetCssPosition</name>
+            <!-- Property type, supported values: string, bool -->
+            <type>bool</type>
+            <!-- Default value for new projects -->
+            <default>true</default>
+            <!-- Name and tooltip text used for the input field in the UI: -->
+            <displayName>Include position?</displayName>
+            <toolTip>Whether or not to include "left" and "top" position fields.</toolTip>
+            <!-- Only displayed if advanced settings are expanded (small triangle
+                 in front of Data settings) -->
+            <isAdvanced>true</isAdvanced>
+        </property>
         <!-- more <property>s can be defined here -->
     </properties>
 </exporter>
